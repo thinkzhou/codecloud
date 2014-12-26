@@ -1,0 +1,44 @@
+<html>
+<head>
+  <title>CodeCloud Editor</title>
+  <script src="../../static/cc/js/jquery-2.0.3.min.js"></script>
+</head>
+<body>
+  <div id="editor">Type in a word like "will" below and press ctrl+space or alt+space to get "rhyme completion"</div>
+  <div id="commandline" style="position: absolute; bottom: 10px; height: 20px; width: 800px;"></div>
+  <style type="text/css" media="screen">
+    #editor {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+</style>
+</body>
+
+
+  <script src="../../static/cc/js/ace-editor/ace.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../../static/cc/js/ace-editor/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var langTools = ace.require("ace/ext/language_tools");
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/c_cpp");
+    editor.setOptions({enableBasicAutocompletion: true});
+    var rhymeCompleter = {
+        getCompletions: function(editor, session, pos, prefix, callback) {
+            if (prefix.length === 0) { callback(null, []); return }
+            $.getJSON(
+                "http://127.0.0.1:8000/cc/data",
+                function(wordList) {
+
+                    callback(null, wordList.map(function(ea) {
+                        return {name: ea.word, value: ea.word,}
+                    }));
+                })
+        }
+    }
+    langTools.addCompleter(rhymeCompleter);
+</script>
+</html>
