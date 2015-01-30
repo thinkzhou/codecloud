@@ -1,0 +1,22 @@
+{% extends "cc/base.html" %}
+{%block content%}
+<table>
+<tr>
+    <td>ID</td>>
+    <td>Title</td>>
+    <td>Ratio(AC/submit)</td>>
+</tr>
+{%if problems %}
+    {%for problem in problems%}
+    <tr>
+        <td>{{problem.id}}</td>>
+        <td><a href='/cc/problem/{{problem.id}}'>{{problem.problem_name}}</a>
+        </td>
+        <td>{{problem.problem_accepted}}/{{problem.problem_total_submissions}}</td>
+    </tr>
+    {%endfor%}
+{%else%}
+<p>No problem available.</p>
+{%endif%}
+</table>
+{%endblock%}

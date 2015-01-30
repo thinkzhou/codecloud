@@ -9,9 +9,9 @@ class Problem(models.Model):
         max_length=65535, blank=True, null=True)
     problem_input = models.TextField(max_length=65535, blank=True, null=True)
     problem_output = models.TextField(max_length=65535, blank=True, null=True)
-    probelm_simple_input = models.TextField(
+    problem_sample_input = models.TextField(
         max_length=65535, blank=True, null=True)
-    probelm_simple_output = models.TextField(
+    problem_sample_output = models.TextField(
         max_length=65535, blank=True, null=True)
     problem_hint = models.TextField(max_length=65535, blank=True, null=True)
     problem_source = models.TextField(max_length=65535, blank=True, null=True)

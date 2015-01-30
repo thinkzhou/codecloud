@@ -1,0 +1,27 @@
+{% extends "cc/base.html" %}
+{%block content%}
+{%if problem%}
+<p><h2>Description</h2></p>
+<p>{{problem.problem_description|linebreaksbr}}</p>
+
+<p><h2>Input</h2></p>
+<p>{{problem.problem_input|linebreaksbr}}</p>
+
+<p><h2>Output</h2></p>
+<p>{{problem.problem_output|linebreaksbr}}</p>
+
+<p><h2>Sample Input</h2></p>
+<p>{{problem.problem_sample_input|linebreaksbr}}</p>
+
+<p><h2>Sample Output</h2></p>
+<p>{{problem.problem_sample_output|linebreaksbr}}</p>
+
+<p><h2>Hint</h2></p>
+<p>{{problem.problem_hint|linebreaksbr}}</p>
+
+<p><h2>Source</h2></p>
+<p>{{problem.problem_source|linebreaksbr}}</p>
+{%else%}
+<p>No problem available.</p>
+{%endif%}
+{%endblock%}
