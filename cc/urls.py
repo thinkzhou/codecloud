@@ -12,6 +12,8 @@ urlpatterns = patterns(
     url(r'^register/$', views.register),
     url(r'^register_success/$', views.register_success),
     url(r'^add_problem/$', views.add_problem),
-    url(r'problemlist/$', views.problem_list),
-    url(r'problem/(?P<problem_id>\d+)/$', views.problem_detail)
+    url(r'^problemlist/$', views.problem_list),
+    url(r'^problem/(?P<problem_id>\d+)/$', views.problem_detail),
+    url(r'^setting/$', views.setting),
+    url(r'^change_password/$', views.change_password),
 )

@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib import auth
-
+from django.contrib.auth.hashers import check_password
 
 from cc.models import Problem
 
@@ -174,6 +174,50 @@ def problem_list(request):
 def problem_detail(request, problem_id):
     problem = Problem.objects.get(pk=problem_id)
     return render_to_response('cc/problem_detail.html', locals())
+
+
+@login_required
+def setting(request):
+    user = request.user
+    return render_to_response('cc/setting.html', locals())
+
+
+class passwordFrom(forms.Form):
+    current_password = forms.CharField(
+        label='current_password', widget=forms.PasswordInput()
+    )
+    new_password = forms.CharField(
+        label='new_password', widget=forms.PasswordInput()
+    )
+
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = passwordFrom(request.POST)
+        if form.is_valid():
+            current_password = form.cleaned_data['current_password']
+            new_password = form.cleaned_data['new_password']
+            user = request.user
+            if check_password(current_password, encoded=user.password):
+                user.set_password(new_password)
+                user.save()
+                return render_to_response(
+                    'cc/action_result.html', {
+                        'actions': 'change_password',
+                        'result': 'success',
+                    }
+                )
+            else:
+                form.add_error(None, 'the pasword in not match')
+        else:
+            form.add_error(None, 'please check the form, you miss something.')
+    else:
+        form = passwordFrom()
+    return render_to_response(
+        "cc/change_password.html", {'form': form},
+        context_instance=RequestContext(request),
+    )
 
 
 def get_data(request):
