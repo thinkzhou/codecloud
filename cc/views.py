@@ -239,3 +239,11 @@ def get_data(request):
         json.dumps(key_word),
         content_type="application/json"
     )
+
+
+def xmpp(request):
+    return render_to_response('cc/xmpp.html')
+
+
+def echobot(request):
+    return render_to_response('cc/echobot.html')

@@ -1,0 +1,28 @@
+{%  load staticfiles %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+          "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Hello - Chapter 3</title>
+
+    <link rel='stylesheet' href="{% static 'cc/css/jquery-ui.css' %}">
+    <script src='{% static 'cc/js/jquery1.11.2.js' %}'></script>
+    <script src='{% static 'cc/js/jquery-ui.js' %}'></script>
+    <script src='{% static 'cc/js/strophe.js' %}'></script>
+
+    <link rel='stylesheet' href="{% static 'cc/css/hello.css' %}">
+    <script src='{% static 'cc/js/hello.js' %}'></script>
+  </head>
+  <body>
+    <h1>Hello</h1>
+
+    <div id='log'>
+    </div>
+
+    <!-- login dialog -->
+    <div id='login_dialog' class='hidden'>
+      <label>JID:</label><input type='text' id='jid'>
+      <label>Password:</label><input type='password' id='password'>
+    </div>
+  </body>
+</html>

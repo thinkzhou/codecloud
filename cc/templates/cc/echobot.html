@@ -1,0 +1,97 @@
+{%  load staticfiles %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>Strophe.js Echobot Example</title>
+
+    <script src='{% static 'cc/js/jquery1.11.2.js' %}'></script>
+    <script src='{% static 'cc/js/jquery-ui.js' %}'></script>
+    <script src='{% static 'cc/js/strophe.js' %}'></script>
+    <script src='{% static 'cc/js/echobot.js' %}'></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'cc/plugins/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'cc/plugins/bootstrap/css/bootstrap-responsive.css' %}" rel="stylesheet">
+    <script type='text/javascript' src="{% static 'cc/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+</head>
+<body>
+<div id='login' style='text-align: center'>
+    <form name='cred'>
+        <label for='jid'>JID:</label>
+        <input type='text' id='jid' value="zhouyang@localhost"/>
+        <label for='pass'>Password:</label>
+        <input type='password' id='pass' value="12345678"/>
+        <input type='button' id='connect' value='connect' />
+    </form>
+</div>
+<hr />
+<div id='log'></div>
+<div id="user_info_block" class="well well-small span4 affix" style="bottom: 40px;right: 0px;display: none;">
+    <button type="button" class="close" onclick="closeUserInfo();">&times;</button>
+    <b>UserName:</b><span id="username"></span>
+</div>
+<div id="user_topic_block" class="well well-small affix" style="width:500px;bottom: 40px;right: 0px;display: none;">
+    <button type="button" class="close" onclick="closeUserTopic();">&times;</button>
+    <b>UserName:</b><span id="topic_username"></span>
+    <div id="messages_block" class="well well-small" style="width:460px;min-height: 200px;max-height:200px;margin-top: 10px;background-color: white;overflow-y: auto;">
+    </div>
+    <div  style="width: 500px">
+        <form id="message-create" action="javascript:sendMsg()" style="margin-bottom: 0px">
+            <div class="message-field">
+                <textarea id="message_text" name="content" placeholder="Message" tabindex="8" style="width: 380px;max-height: 200px"></textarea>
+                <button class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="group_topic_block" class="well well-small affix" style="width:500px;bottom: 40px;right: 0px;//display: none;">
+    <button type="button" class="close" onclick="closeGroupTopic();">&times;</button>
+    <b>GroupName:</b><span id="topic_group_name">Shu</span>
+    <div class="">
+        <div id="group_messages_block" class="well well-small" style="width:320px;min-height: 200px;max-height:200px;margin-top: 10px;background-color: white;overflow-y: auto;float:left;">
+        </div>
+        <div id="group_user_block" class="well well-small" style="width:120px;min-height: 200px;max-height:200px;margin-top: 10px;margin-left:10px;background-color: white;overflow-y: auto;float:left;">
+        </div>
+    </div>
+    <div style="width: 500px">
+        <form id="group-message-create" action="javascript:sendGroupMsg()" style="margin-bottom: 0px">
+            <div class="message-field">
+                <textarea id="group_message_text" name="content" placeholder="Message" tabindex="8" style="width: 320px;max-height: 200px"></textarea>
+                <button class="btn btn-primary" style="margin-left: 10px">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="message-alert" class=" affix"  style="bottom: 40px;left:50%;">
+
+</div>
+<div id="friends-navbar" class="navbar navbar-fixed-bottom" style="width: 380px;right: -340px;left:initial;">
+    <div class="navbar-inner">
+        <ul class="nav pull-left">
+            <li class=""><a href="javascript:changeNavBarStyle();"><i id="navbar-icon" class="icon-chevron-left"></i></a></li>
+            <li class=""><a href="javascript:showUserInfo();">User Info</a></li>
+            <ul class="nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <span>Topic</span><span id="new_msg_num" class="badge badge-important"></span>
+                        <b class="caret"></b>
+                    </a>
+                    <ul id="user_topics" class="dropdown-menu">
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <span>Groups</span><span id="new_group_msg_num" class="badge badge-important"></span>
+                        <b class="caret"></b>
+                    </a>
+                    <ul id="user_groups" class="dropdown-menu">
+                    </ul>
+                </li>
+            </ul>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

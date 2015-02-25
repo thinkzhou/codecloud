@@ -16,4 +16,6 @@ urlpatterns = patterns(
     url(r'^problem/(?P<problem_id>\d+)/$', views.problem_detail),
     url(r'^setting/$', views.setting),
     url(r'^change_password/$', views.change_password),
+    url(r'^xmpp/$', views.xmpp),
+    url(r'echo/$', views.echobot),
 )
