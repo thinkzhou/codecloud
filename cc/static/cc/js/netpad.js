@@ -235,8 +235,7 @@ $(document).ready(function () {
             $(this).val('');
         }
     });
-
-    $('#pad').keypress(function (ev) {
+    $('#pad').keydown(function (ev) {
         if (NetPad.collaborator) {
             var idx = this.selectionStart;
             var handled = true;
@@ -244,9 +243,18 @@ $(document).ready(function () {
                 this.selectionStart = idx - 1;
                 this.selectionEnd = idx - 1;
                 NetPad.send_op('delete', idx - 1);
+                ev.preventDefault();
             } else if (ev.which === 46) {
                 NetPad.send_op('delete', idx);
-            } else if(ev.which===13||ev.which==10){
+                ev.preventDefault();
+            }
+        }
+    });
+    $('#pad').keypress(function (ev) {
+        if (NetPad.collaborator) {
+            var idx = this.selectionStart;
+            var handled = true;
+            if(ev.which===13||ev.which==10){
                 NetPad.send_op('breakline', idx);
                 ev.preventDefault();
             }else if ((ev.which >= 32 && ev.which <= 127) ||
@@ -254,7 +262,6 @@ $(document).ready(function () {
                 NetPad.send_op('insert', idx, String.fromCharCode(ev.which));
                 ev.preventDefault();
             }
-            //ev.preventDefault();
         }
     });
 });
