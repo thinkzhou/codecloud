@@ -129,8 +129,6 @@ $(document).ready(function () {
         var button =$('#connect').get(0);
         if(button.value=='connect'){
             button.value = 'disconnect';
-            alert($('#jid').get(0).value);
-            alert($('#pass').get(0).value);
             connection.connect($('#jid').get(0).value,
             $('#pass').get(0).value,
             onConnect);

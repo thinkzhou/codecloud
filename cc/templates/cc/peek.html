@@ -1,0 +1,39 @@
+{%  load staticfiles %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+      <meta charset="utf-8">
+      <title>Strophe.js Echobot Example</title>
+      <link href="{% static 'cc/css/jquery-ui.css' %}" rel="stylesheet">
+      <script src='{% static 'cc/js/jquery.js' %}'></script>
+      <script src='{% static 'cc/js/jquery-ui.js' %}'></script>
+      <script src='{% static 'cc/js/strophe.js' %}'></script>
+      <script src='{% static 'cc/js/peek.js' %}'></script>
+      <script src='{% static 'cc/js/netpad.js' %}'></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link href="{% static 'cc/plugins/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+      <link href="{% static 'cc/css/peek.css' %}" rel="stylesheet">
+      <!--<link href="{% static 'cc/plugins/bootstrap/css/bootstrap-responsive.css' %}" rel="stylesheet">
+      <script type='text/javascript' src="{% static 'cc/plugins/bootstrap/js/bootstrap.min.js' %}"></script>-->
+  </head>
+  <body>
+      <h1>Peek</h1>
+
+      <div id='console'></div>
+      <textarea id='input' class='disabled'
+                disabled='disabled'></textarea>
+
+      <div id='buttonbar'>
+        <input id='send_button' type='button' value='Send Data'
+               disabled='disabled' class='button'>
+        <input id='disconnect_button' type='button' value='Disconnect'
+               disabled='disabled' class='button'>
+      </div>
+
+      <!-- login dialog -->
+      <div id='login_dialog' class='hidden'>
+        <label>JID:</label><input type='text' id='jid' value='zhouyang@localhost'>
+        <label>Password:</label><input type='password' id='password' value = '12345678'>
+      </div>
+  </body>
+</html>

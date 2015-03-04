@@ -247,3 +247,19 @@ def xmpp(request):
 
 def echobot(request):
     return render_to_response('cc/echobot.html')
+
+
+def peek(request):
+    return render_to_response('cc/peek.html')
+
+
+def gab(request):
+    return render_to_response('cc/gab.html')
+
+
+def netpad(request):
+    return render_to_response('cc/netpad.html')
+
+
+def dig(request):
+    return render_to_response('cc/dig.html')

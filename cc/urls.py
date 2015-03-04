@@ -17,5 +17,9 @@ urlpatterns = patterns(
     url(r'^setting/$', views.setting),
     url(r'^change_password/$', views.change_password),
     url(r'^xmpp/$', views.xmpp),
-    url(r'echo/$', views.echobot),
+    url(r'^echo/$', views.echobot),
+    url(r'^peek/$', views.peek),
+    url(r'^gab/$', views.gab),
+    url(r'^netpad/$', views.netpad),
+    url(r'^dig/$', views.dig),
 )
