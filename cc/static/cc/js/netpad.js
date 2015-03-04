@@ -162,7 +162,6 @@ var NetPad = {
         for (i = 0; i < req[3].length; i++) {
             msg.c('cell').t('' + req[3][i]).up();
         }
-
         NetPad.connection.send(msg);
     },
 
@@ -218,7 +217,7 @@ $(document).ready(function () {
 
     $('#input').keypress(function (ev) {
         if (ev.which === 13) {
-            //ev.preventDefault();
+            ev.preventDefault();
 
             var body = $(this).val();
             $('#chat').append("<div class='message'>" +
@@ -247,11 +246,14 @@ $(document).ready(function () {
                 NetPad.send_op('delete', idx - 1);
             } else if (ev.which === 46) {
                 NetPad.send_op('delete', idx);
-            } else if ((ev.which >= 32 && ev.which <= 127) ||
+            } else if(ev.which===13||ev.which==10){
+                NetPad.send_op('breakline', idx);
+                ev.preventDefault();
+            }else if ((ev.which >= 32 && ev.which <= 127) ||
                        ev.which >= 256) {
                 NetPad.send_op('insert', idx, String.fromCharCode(ev.which));
+                ev.preventDefault();
             }
-
             //ev.preventDefault();
         }
     });

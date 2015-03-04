@@ -132,6 +132,8 @@ var OpTrans = {
             this.buffer.splice(pos, 0, [chr]);
         } else if (op === 'delete') {
             this.buffer.splice(pos, 1);
+        }else if(op==='breakline'){
+            this.buffer.splice(pos, 0, ['\n']);
         }
 
         this.update_func(this.buffer.join(''), remote);
