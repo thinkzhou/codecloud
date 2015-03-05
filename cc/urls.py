@@ -22,4 +22,5 @@ urlpatterns = patterns(
     url(r'^gab/$', views.gab),
     url(r'^netpad/$', views.netpad),
     url(r'^dig/$', views.dig),
+    url(r'^ajax/jid/$', views.update_jid),
 )

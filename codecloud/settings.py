@@ -91,3 +91,5 @@ TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 
 LOGIN_URL = '/cc/login/'
 LOGIN_REDIRECT_URL = '/cc/home/'
+# extend User table
+AUTH_PROFILE_MODULE = 'cc.Profile'

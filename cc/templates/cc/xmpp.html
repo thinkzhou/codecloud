@@ -9,6 +9,9 @@
     <script src='{% static 'cc/js/jquery.js' %}'></script>
     <script src='{% static 'cc/js/jquery-ui.js' %}'></script>
     <script src='{% static 'cc/js/strophe.js' %}'></script>
+    <link rel='stylesheet' href="{% static 'cc/plugins/jquery-ui/jquery-ui.css' %}">
+
+    <link rel='stylesheet' href="{% static 'cc/plugins/jquery-ui/jquery-ui.theme.css' %}">
 
     <link rel='stylesheet' href="{% static 'cc/css/hello.css' %}">
     <script src='{% static 'cc/js/hello.js' %}'></script>
@@ -21,8 +24,8 @@
 
     <!-- login dialog -->
     <div id='login_dialog' class='hidden'>
-      <label>JID:</label><input type='text' id='jid'>
-      <label>Password:</label><input type='password' id='password'>
+      <label>JID:</label><input type='text' id='jid' value = 'zhouyang@localhost'>
+      <label>Password:</label><input type='password' id='password' value = '12345678'>
     </div>
   </body>
 </html>

@@ -3,6 +3,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib import auth
@@ -11,7 +12,7 @@ from django.contrib.auth.hashers import check_password
 from cc.models import Problem
 
 ###################################
-# login, reister and logout views
+# forms
 ###################################
 
 
@@ -20,6 +21,36 @@ class UserForm(forms.Form):
     password = forms.CharField(label='password', widget=forms.PasswordInput())
 
 
+class passwordForm(forms.Form):
+    current_password = forms.CharField(
+        label='current_password', widget=forms.PasswordInput()
+    )
+    new_password = forms.CharField(
+        label='new_password', widget=forms.PasswordInput()
+    )
+
+
+class Problem_Form(forms.Form):
+    problem_name = forms.CharField(label='name', max_length=100)
+    problem_description = forms.CharField(
+        label='description', widget=forms.Textarea)
+    problem_input = forms.CharField(label='input', widget=forms.Textarea)
+    problem_output = forms.CharField(label='output', widget=forms.Textarea)
+    problem_sample_input = forms.CharField(
+        label='simple_input', widget=forms.Textarea)
+    problem_sample_output = forms.CharField(
+        label='simple_output', widget=forms.Textarea)
+    problem_hint = forms.CharField(label='hint', widget=forms.Textarea)
+    problem_source = forms.CharField(label='source', widget=forms.Textarea)
+    probelm_time_limit = forms.IntegerField(label='time_limit')
+    problem_memory_limit = forms.IntegerField(label='memory_limit')
+    problem_total_submissions = forms.IntegerField(label='total_submissions')
+    problem_accepted = forms.IntegerField(label='accepted')
+
+
+###################################
+# login, reister and logout views
+###################################
 def login(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
@@ -50,6 +81,8 @@ def register(request):
                     username=username,
                     password=password,
                 )
+                # todo
+                # create user from ejabber server
                 return HttpResponseRedirect("/cc/register_success")
             except Exception:
                 form.add_error(None, 'duplicate username')
@@ -73,9 +106,6 @@ def logout(request):
 def loggedout(request):
     return render_to_response('cc/loggedout.html')
 
-#########################################
-#########################################
-
 
 def index(request):
     return render_to_response('cc/index.html', locals())
@@ -85,24 +115,6 @@ def index(request):
 def home(request):
     username = request.user.username
     return render_to_response('cc/home.html', locals())
-
-
-class Problem_Form(forms.Form):
-    problem_name = forms.CharField(label='name', max_length=100)
-    problem_description = forms.CharField(
-        label='description', widget=forms.Textarea)
-    problem_input = forms.CharField(label='input', widget=forms.Textarea)
-    problem_output = forms.CharField(label='output', widget=forms.Textarea)
-    problem_sample_input = forms.CharField(
-        label='simple_input', widget=forms.Textarea)
-    problem_sample_output = forms.CharField(
-        label='simple_output', widget=forms.Textarea)
-    problem_hint = forms.CharField(label='hint', widget=forms.Textarea)
-    problem_source = forms.CharField(label='source', widget=forms.Textarea)
-    probelm_time_limit = forms.IntegerField(label='time_limit')
-    problem_memory_limit = forms.IntegerField(label='memory_limit')
-    problem_total_submissions = forms.IntegerField(label='total_submissions')
-    problem_accepted = forms.IntegerField(label='accepted')
 
 
 @login_required
@@ -182,19 +194,10 @@ def setting(request):
     return render_to_response('cc/setting.html', locals())
 
 
-class passwordFrom(forms.Form):
-    current_password = forms.CharField(
-        label='current_password', widget=forms.PasswordInput()
-    )
-    new_password = forms.CharField(
-        label='new_password', widget=forms.PasswordInput()
-    )
-
-
 @login_required
 def change_password(request):
     if request.method == 'POST':
-        form = passwordFrom(request.POST)
+        form = passwordForm(request.POST)
         if form.is_valid():
             current_password = form.cleaned_data['current_password']
             new_password = form.cleaned_data['new_password']
@@ -213,32 +216,15 @@ def change_password(request):
         else:
             form.add_error(None, 'please check the form, you miss something.')
     else:
-        form = passwordFrom()
+        form = passwordForm()
     return render_to_response(
         "cc/change_password.html", {'form': form},
         context_instance=RequestContext(request),
     )
 
-
-def get_data(request):
-    cpp_keyword = [
-        "asm", "do", "if", "return", "typedef", "auto", "double", "inline",
-        "short", "typeid", "bool", "dynamic_cast", "int", "signed", "typename",
-        "break", "else", "long", "sizeof", "union", "case", "enum", "mutable",
-        "static", "unsigned", "catch", "explicit", "namespace", "static_cast",
-        "using", "char", "export", "new", "struct", "virtual", "class",
-        "extern", "operator", "switch", "void", "const", "false", "private",
-        "template", "volatile", "const_cast", "float", "protected", "this",
-        "wchar_t", "continue", "for", "public", "throw", "while", "default",
-        "friend", "register", "true", "delete", "goto", "reinterpret_cast",
-        "try", "iostream", "algorithm", "cstdio", "cstring", "cmath", "string",
-        "include", "define", "bits/stdc++.h",
-    ]
-    key_word = [{"word": key}for key in cpp_keyword]
-    return HttpResponse(
-        json.dumps(key_word),
-        content_type="application/json"
-    )
+###################################
+# xmpp pages
+###################################
 
 
 def xmpp(request):
@@ -263,3 +249,59 @@ def netpad(request):
 
 def dig(request):
     return render_to_response('cc/dig.html')
+
+
+###################################
+# API for data exchanging
+###################################
+def get_data(request):
+    cpp_keyword = [
+        "asm", "do", "if", "return", "typedef", "auto", "double", "inline",
+        "short", "typeid", "bool", "dynamic_cast", "int", "signed", "typename",
+        "break", "else", "long", "sizeof", "union", "case", "enum", "mutable",
+        "static", "unsigned", "catch", "explicit", "namespace", "static_cast",
+        "using", "char", "export", "new", "struct", "virtual", "class",
+        "extern", "operator", "switch", "void", "const", "false", "private",
+        "template", "volatile", "const_cast", "float", "protected", "this",
+        "wchar_t", "continue", "for", "public", "throw", "while", "default",
+        "friend", "register", "true", "delete", "goto", "reinterpret_cast",
+        "try", "iostream", "algorithm", "cstdio", "cstring", "cmath", "string",
+        "include", "define", "bits/stdc++.h",
+    ]
+    key_word = [{"word": key}for key in cpp_keyword]
+    return HttpResponse(
+        json.dumps(key_word),
+        content_type="application/json"
+    )
+
+
+@login_required
+@csrf_exempt
+def update_jid(request):
+    '''
+    update state use jid
+    '''
+    jid = request.POST.get('jid', '')
+    state = request.POST.get('state', '')
+    data = {'jid': jid, 'state': state}
+    return HttpResponse(
+        json.dumps(data),
+        content_type="application/json"
+    )
+
+
+@login_required
+@csrf_exempt
+def get_jid(request):
+    user = request.user
+    data = {}
+    if (user):
+        # select from database
+
+        data['result'] = 'true'
+    else:
+        data['result'] = 'false'
+    return HttpResponse(
+        json.dumps(data),
+        content_type="application/json"
+    )

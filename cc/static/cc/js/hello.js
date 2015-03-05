@@ -53,6 +53,16 @@ $(document).bind('connect', function (ev, data) {
         "http://127.0.0.1:5280/http-bind/");
     conn.connect(data.jid, data.password, function (status) {
         if (status === Strophe.Status.CONNECTED) {
+            $.ajax({
+                url: '/cc/ajax/jid/',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    jid: conn.jid,
+                    state:'yes',
+                },
+            })
+
             $(document).trigger('connected');
         } else if (status === Strophe.Status.DISCONNECTED) {
             $(document).trigger('disconnected');
@@ -78,6 +88,20 @@ $(document).bind('connected', function () {
 
 $(document).bind('disconnected', function () {
     Hello.log("Connection terminated.");
+    $.ajax({
+        url: '/cc/ajax/jid/',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            jid: Hello.connection.jid,
+            state:'no',
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+    })
+    .done(function(data) {
+        alert(JSON.stringify(data));
+        console.log("success");
+    })
 
     // remove dead connection object
     Hello.connection = null;
