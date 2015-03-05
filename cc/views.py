@@ -10,6 +10,7 @@ from django.contrib import auth
 from django.contrib.auth.hashers import check_password
 
 from cc.models import Problem
+from cc.core.utils import *
 
 ###################################
 # forms
@@ -281,11 +282,21 @@ def update_jid(request):
     '''
     update state use jid
     '''
+    user = request.user
     jid = request.POST.get('jid', '')
-    state = request.POST.get('state', '')
-    data = {'jid': jid, 'state': state}
+    print 'state:' + request.POST.get('state', '')
+    state = request.POST.get('state', '') == 'true'
+    result = False
+    print jid
+    print state
+    if jid:
+        result = update_profile(
+            username=user.username,
+            jid=jid,
+            state=state,
+        )
     return HttpResponse(
-        json.dumps(data),
+        json.dumps(result),
         content_type="application/json"
     )
 
@@ -293,14 +304,14 @@ def update_jid(request):
 @login_required
 @csrf_exempt
 def get_jid(request):
-    user = request.user
+    username = request.POST.get('name', '')
     data = {}
     if (user):
         # select from database
-
-        data['result'] = 'true'
+        jid = get_current_jid(username=username)
+        data['jid'] = jid
     else:
-        data['result'] = 'false'
+        data['jid'] = ''
     return HttpResponse(
         json.dumps(data),
         content_type="application/json"

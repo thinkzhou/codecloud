@@ -54,15 +54,14 @@ $(document).bind('connect', function (ev, data) {
     conn.connect(data.jid, data.password, function (status) {
         if (status === Strophe.Status.CONNECTED) {
             $.ajax({
-                url: '/cc/ajax/jid/',
+                url: '/cc/ajax/update_jid/',
                 type: 'POST',
                 dataType: 'json',
                 data: {
                     jid: conn.jid,
-                    state:'yes',
+                    state: true,
                 },
             })
-
             $(document).trigger('connected');
         } else if (status === Strophe.Status.DISCONNECTED) {
             $(document).trigger('disconnected');
@@ -89,18 +88,13 @@ $(document).bind('connected', function () {
 $(document).bind('disconnected', function () {
     Hello.log("Connection terminated.");
     $.ajax({
-        url: '/cc/ajax/jid/',
+        url: '/cc/ajax/update_jid/',
         type: 'POST',
         dataType: 'json',
         data: {
             jid: Hello.connection.jid,
-            state:'no',
-            csrfmiddlewaretoken: '{{ csrf_token }}'
+            state:'false',
         },
-    })
-    .done(function(data) {
-        alert(JSON.stringify(data));
-        console.log("success");
     })
 
     // remove dead connection object
