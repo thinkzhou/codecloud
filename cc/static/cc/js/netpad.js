@@ -187,7 +187,7 @@ var NetPad = {
 
 $(document).ready(function () {
     $('#login_dialog').dialog({
-        autoOpen: true,
+        autoOpen: false,
         draggable: false,
         modal: true,
         title: 'Connect to XMPP',
@@ -203,6 +203,25 @@ $(document).ready(function () {
                 $(this).dialog('close');
             }
         }
+    });
+    $('#open_login').click(function(){
+        $('#login_dialog').dialog('open');
+    });
+    $('#get_jid').click(function(event) {
+        name = $('#who').val();
+        $.ajax({
+            url: '/cc/ajax/get_jid/',
+            type: 'POST',
+            dataType: 'json',
+            data: {'name': name},
+        })
+        .done(function(data) {
+            jid = data['jid'];
+            if (jid){
+                $('#collaborator').val(jid);
+            }
+        })
+
     });
 
     $('#disconnect').click(function () {
@@ -272,6 +291,15 @@ $(document).bind('connect', function (ev, data) {
 
     conn.connect(data.jid, data.password, function (status) {
         if (status === Strophe.Status.CONNECTED) {
+            $.ajax({
+                url: '/cc/ajax/update_jid/',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    jid: conn.jid,
+                    state: true,
+                },
+            })
             $(document).trigger('connected');
         } else if (status === Strophe.Status.DISCONNECTED) {
             $(document).trigger('disconnected');
@@ -324,7 +352,7 @@ $(document).bind('connected', function () {
 
         $('#pad').removeAttr('disabled');
 
-        // handle incoming discovery and collaboration requests
+        // handle incoming discovery and collaboration requestsb
         NetPad.connection.addHandler(NetPad.on_disco_info,
                                      Strophe.NS.DISCO_INFO, "iq", "get");
         NetPad.connection.addHandler(NetPad.on_collaborate,
@@ -335,7 +363,15 @@ $(document).bind('connected', function () {
 });
 
 $(document).bind('disconnected', function () {
+    $.ajax({
+        url: '/cc/ajax/update_jid/',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            jid: NetPad.connection.jid,
+            state:'false',
+        },
+    })
     NetPad.connection = null;
-
     $('#login_dialog').dialog('open');
 });
