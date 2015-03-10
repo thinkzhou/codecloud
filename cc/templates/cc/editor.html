@@ -1,0 +1,66 @@
+{%  load staticfiles %}
+<html>
+<head>
+  <title>CodeCloud Editor</title>
+
+  <script src='{% static 'cc/js/jquery.js' %}'></script>
+  <script src='{% static 'cc/js/jquery-ui.js' %}'></script>
+
+  <link rel='stylesheet' href="{% static 'cc/plugins/jquery-ui/jquery-ui.css' %}">
+  <script src='{% static 'cc/js/strophe.js' %}'></script>
+  <script src='{% static 'cc/js/optrans.js' %}'></script>
+  <link rel='stylesheet' href="{% static 'cc/css/netpad.css' %}">
+</head>
+<body>
+  <div id="editor"></div>
+  <div id="commandline" style="position: absolute; bottom: 10px; height: 20px; width: 800px;"></div>
+</body>
+  <script src='{% static 'cc/js/ace-editor/ace.js' %}'></script>
+  <script src='{% static 'cc/js/ace-editor/ext-language_tools.js' %}'></script>
+  <script src='{% static 'cc/js/net_editor.js' %}'></script>
+  <div id = 'area'>
+    <div id='status' class='no-collab'>
+      Not collaborating.
+    </div>
+    <input id='disconnect' type='button' value='disconnect'
+           disabled='disabled'>
+    <div class='clear'></div>
+
+    <textarea id='pad' disabled='disabled'></textarea>
+
+    <div id='chat-area'>
+      <div id='chat'></div>
+      <input id='input' type='text' disabled='disabled'>
+    </div>
+
+    <!-- login dialog -->
+    <div id='login_dialog' class='hidden'>
+      <label>JID:</label><input type='text' id='jid' value="zhouyang@localhost">
+      <label>Password:</label><input type='password' id='password' value="12345678">
+      <label>Collaborator:</label><input type='collaborator' id='collaborator'>
+    </div>
+    <div>
+      <input type='text' id = 'who' value = 'zhouyang'><input type="button" id = 'get_jid' value='get_jid'>
+      <input type='button' id='open_login' value='open'>
+
+      <input type='button' id='get_value' value='get_value'>
+    </div>
+  </div>
+
+  <style type="text/css" media="screen">
+    #editor {
+        position: absolute;
+        top: 0;
+        right: 50%;
+        bottom: 0%;
+        left: 0;
+    }
+    #area{
+      position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 50%;
+    }
+</style>
+</html>

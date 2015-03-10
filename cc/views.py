@@ -313,3 +313,7 @@ def get_jid(request):
         json.dumps(data),
         content_type="application/json"
     )
+
+
+def editor(request):
+    return render_to_response('cc/editor.html')

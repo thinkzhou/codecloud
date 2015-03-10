@@ -3,6 +3,7 @@ var NetPad = {
     collaborator: null,
     NS_NETPAD: 'http://metajack.im/ns/netpad',
     master: null,
+    editor_session:null,
 
     on_disco_info: function (iq) {
         NetPad.connection.sendIQ(
@@ -14,7 +15,6 @@ var NetPad = {
                 .c('identity', {category: 'client',
                                 type: 'pc'}).up()
                 .c('feature', {'var': NetPad.NS_NETPAD}));
-
         return true;
     },
 
@@ -43,7 +43,7 @@ var NetPad = {
 
         $('#input').removeAttr('disabled');
 
-        var buffer = $('#pad').val();//get things that master had inputed
+        var buffer = NetPad.editor_session.getValue();//get things that master had inputed
         OpTrans.init([NetPad.connection.jid, NetPad.collaborator],
                      buffer,
                      NetPad.update_pad);
@@ -73,7 +73,8 @@ var NetPad = {
                 } else {
                     var command = collab[0].tagName;
                     if (command === "start") {
-                        $('#pad').val(collab.text());
+                        //$('#pad').val(collab.text());
+                        NetPad.editor_session.setValue(collab.text());
                         NetPad.start_collaboration();
                     } else if (command === "stop") {
                         NetPad.stop_collaboration();
@@ -129,16 +130,17 @@ var NetPad = {
     },
 
     update_pad: function (buffer, remote) {
-        var old_pos = $('#pad')[0].selectionStart;
-        var old_buffer = $('#pad').val();
-        $('#pad').val(buffer);
+        //var old_pos = $('#pad')[0].selectionStart;
+        var old_pos = NetPad.editor_session.selection.getCursor();
+        var old_buffer = NetPad.editor_session.getValue();
+        NetPad.editor_session.setValue(buffer);
 
         if (buffer.length > old_buffer.length && !remote) {
             old_pos += 1;
         }
 
-        $('#pad')[0].selectionStart = old_pos;
-        $('#pad')[0].selectionEnd = old_pos;
+        //$('#pad')[0].selectionStart = old_pos;
+        //$('#pad')[0].selectionEnd = old_pos;
     },
 
     send_op: function (op, pos, chr) {
@@ -184,8 +186,31 @@ var NetPad = {
                           pri);
     }
 };
-
 $(document).ready(function () {
+    var langTools = ace.require("ace/ext/language_tools");
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/c_cpp");
+    editor.setHighlightActiveLine(true);
+    editor.setOptions({
+      enableBasicAutocompletion: true,
+      enableLiveAutocompletion: true,
+      useElasticTabstops:true,
+    });
+    var rhymeCompleter = {
+        getCompletions: function(editor, session, pos, prefix, callback) {
+            if (prefix.length === 0) { callback(null, []); return }
+            $.getJSON(
+                "http://127.0.0.1:8000/cc/data",
+                function(wordList) {
+                    callback(null, wordList.map(function(ea) {
+                        return {name: ea.word, value: ea.word,}
+                    }));
+                })
+        }
+    }
+    langTools.addCompleter(rhymeCompleter);
+    NetPad.editor_session = editor;
     $('#login_dialog').dialog({
         autoOpen: false,
         draggable: false,
@@ -222,6 +247,9 @@ $(document).ready(function () {
             }
         })
 
+    });
+    $('#get_value').click(function(event) {
+        //alert(NetPad.editor_session.selection.getCursor().column);
     });
 
     $('#disconnect').click(function () {
@@ -283,8 +311,25 @@ $(document).ready(function () {
             }
         }
     });
-});
+    NetPad.editor_session.getSession().on('change', function(e) {//bind change event of ace
+        //if(NetPad.collaborator){
+            action = e.data.action;
+            //
+            //alert(e.data.range.toString());
+            if (action == 'insertText'){
+                insert_text = e.data.text;
+                range = e.data.range;
+                alert(NetPad.editor_session.getTextRange(range));
+               // alert('add : '+insert_text);
+            }
+            if (action=='removeText'){
+                remove_text = e.data.text;
+                //alert('remove: '+remove_text);
+            }
 
+       // }
+    });
+});
 $(document).bind('connect', function (ev, data) {
     var conn = new Strophe.Connection(
         "http://localhost:5280/http-bind");
@@ -331,7 +376,7 @@ $(document).bind('connected', function () {
                     'feature[var="' + NetPad.NS_NETPAD + '"]');
                 if (f.length > 0) {
                     $('#status')
-                        .text('Establishing session with ' +z
+                        .text('Establishing session with ' +
                               NetPad.collaborator + '.')
                         .attr('class', 'try-collab');
 
@@ -361,7 +406,6 @@ $(document).bind('connected', function () {
                                      null, "presence");
     }
 });
-
 $(document).bind('disconnected', function () {
     $.ajax({
         url: '/cc/ajax/update_jid/',

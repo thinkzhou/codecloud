@@ -1,10 +1,12 @@
+{%  load staticfiles %}
 <html>
 <head>
   <title>CodeCloud Editor</title>
-  <script src="../../static/cc/js/jquery-2.0.3.min.js"></script>
+
+  <script src='{% static 'cc/js/jquery.js' %}'></script>
 </head>
 <body>
-  <div id="editor">Type in a word like "will" below and press ctrl+space or alt+space to get "rhyme completion"</div>
+  <div id="editor"></div>
   <div id="commandline" style="position: absolute; bottom: 10px; height: 20px; width: 800px;"></div>
   <style type="text/css" media="screen">
     #editor {
