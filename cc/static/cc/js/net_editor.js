@@ -130,17 +130,24 @@ var NetPad = {
     },
 
     update_pad: function (buffer, remote) {
-        //alert('update_pad');
-        //var old_pos = $('#pad')[0].selectionStart;
-        var old_pos_row = NetPad.editor_session.selection.getCursor().row;
-
-        var old_pos_col = NetPad.editor_session.getSession().selection.getCursor().column;
+        var old_row = NetPad.editor_session.selection.getCursor().row;
+        var old_col = NetPad.editor_session.getSession().selection.getCursor().column;
         var old_buffer = NetPad.editor_session.getValue();
         NetPad.editor_session.setValue(buffer);
         if (buffer.length > old_buffer.length && !remote) {
-            old_pos_col += 1;
+            old_col=old_col+1;
         }
-        //NetPad.editor_session.getSession().selection.moveCursorTo(old_pos_row,old_pos_col,true);
+        if(remote){
+            NetPad.editor_session.getSession().selection.moveCursorTo(old_row,old_col,true);
+        }
+        else{
+            if(buffer.length > old_buffer.length){
+                //NetPad.editor_session.getSession().selection.moveCursorRight();
+            }
+            else{
+               // NetPad.editor_session.getSession().selection.moveCursorLeft();
+            }
+        }
         NetPad.editor_session.getSession().selection.clearSelection();
         //$('#pad')[0].selectionStart = old_pos;
         //$('#pad')[0].selectionEnd = old_pos;
@@ -248,6 +255,7 @@ $(document).ready(function () {
             jid = data['jid'];
             if (jid){
                 $('#collaborator').val(jid);
+                $('#jid').val('zhounima@localhost');
             }
         })
 
@@ -315,6 +323,23 @@ $(document).ready(function () {
             }
         }
     });
+    editor.container.addEventListener("keyup", function(e){
+        //alert(e.which);
+        if (NetPad.collaborator) {
+            row= NetPad.editor_session.getSession().selection.getCursor().row;
+            col = NetPad.editor_session.getSession().selection.getCursor().column;
+            key_code = e.which;
+            var ace_range = ace.require("ace/range").Range,
+            mine = new ace_range(0,0,row,col);
+            var handled = true;
+            idx = NetPad.editor_session.getSession().getTextRange(mine).length;
+            if(key_code===8){
+                NetPad.send_op('delete', idx);
+                e.preventDefault();
+            }
+        }
+        return true;
+    }, true);
     editor.container.addEventListener("keypress", function(e){
         row= NetPad.editor_session.getSession().selection.getCursor().row;
         col = NetPad.editor_session.getSession().selection.getCursor().column;
@@ -335,7 +360,7 @@ $(document).ready(function () {
             }
         }
     }, true);
-    /*NetPad.editor_session.getSession().on('change', function(e) {
+    NetPad.editor_session.getSession().on('change', function(e) {
     //bind change event of ace
         if(NetPad.collaborator){
             action = e.data.action;
@@ -343,17 +368,9 @@ $(document).ready(function () {
             start_col = e.data.range.start.column;
             end_row = e.data.range.end.row;
             end_col = e.data.range.end.column;
-            if (action==='removeText'){
-                remove_text = e.data.text;
-                var ace_range = ace.require("ace/range").Range,
-                mine = new ace_range(0,0,end_row,end_col);
-                idx = NetPad.editor_session.getSession().getTextRange(mine).length;
-                NetPad.send_op('delete', idx+1);
-
-                //e.preventDefault();
-            }
+            //alert(action+':'+e.data.text);
         }
-    });*/
+    });
 });
 $(document).bind('connect', function (ev, data) {
     var conn = new Strophe.Connection(
