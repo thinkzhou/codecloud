@@ -130,15 +130,18 @@ var NetPad = {
     },
 
     update_pad: function (buffer, remote) {
+        //alert('update_pad');
         //var old_pos = $('#pad')[0].selectionStart;
-        var old_pos = NetPad.editor_session.selection.getCursor();
+        var old_pos_row = NetPad.editor_session.selection.getCursor().row;
+
+        var old_pos_col = NetPad.editor_session.getSession().selection.getCursor().column;
         var old_buffer = NetPad.editor_session.getValue();
         NetPad.editor_session.setValue(buffer);
-
         if (buffer.length > old_buffer.length && !remote) {
-            old_pos += 1;
+            old_pos_col += 1;
         }
-
+        //NetPad.editor_session.getSession().selection.moveCursorTo(old_pos_row,old_pos_col,true);
+        NetPad.editor_session.getSession().selection.clearSelection();
         //$('#pad')[0].selectionStart = old_pos;
         //$('#pad')[0].selectionEnd = old_pos;
     },
@@ -168,6 +171,7 @@ var NetPad = {
     },
 
     process_op: function (op) {
+        //alert('process_op: '+op);
         var name = op.attr('name');
         var pos = parseInt(op.attr('pos'), 10);
         var chr = op.attr('char');
@@ -249,7 +253,7 @@ $(document).ready(function () {
 
     });
     $('#get_value').click(function(event) {
-        //alert(NetPad.editor_session.selection.getCursor().column);
+        ////alert(NetPad.editor_session.selection.getCursor().column);
     });
 
     $('#disconnect').click(function () {
@@ -301,7 +305,7 @@ $(document).ready(function () {
         if (NetPad.collaborator) {
             var idx = this.selectionStart;
             var handled = true;
-            if(ev.which===13||ev.which==10){
+            if(ev.which===13||ev.which===10){
                 NetPad.send_op('breakline', idx);
                 ev.preventDefault();
             }else if ((ev.which >= 32 && ev.which <= 127) ||
@@ -311,24 +315,45 @@ $(document).ready(function () {
             }
         }
     });
-    NetPad.editor_session.getSession().on('change', function(e) {//bind change event of ace
-        //if(NetPad.collaborator){
+    editor.container.addEventListener("keypress", function(e){
+        row= NetPad.editor_session.getSession().selection.getCursor().row;
+        col = NetPad.editor_session.getSession().selection.getCursor().column;
+        key_code = e.which;
+        var ace_range = ace.require("ace/range").Range,
+        mine = new ace_range(0,0,row,col);
+        var handled = true;
+        idx = NetPad.editor_session.getSession().getTextRange(mine).length;
+        if (NetPad.collaborator) {
+            if(key_code===13||key_code===10){
+                NetPad.send_op('breakline',idx);
+                e.preventDefault();
+            }
+            else if((key_code>=32 && key_code<=127)||
+                  key_code>=256){
+                NetPad.send_op('insert',idx,String.fromCharCode(key_code));
+                e.preventDefault();
+            }
+        }
+    }, true);
+    /*NetPad.editor_session.getSession().on('change', function(e) {
+    //bind change event of ace
+        if(NetPad.collaborator){
             action = e.data.action;
-            //
-            //alert(e.data.range.toString());
-            if (action == 'insertText'){
-                insert_text = e.data.text;
-                range = e.data.range;
-                alert(NetPad.editor_session.getTextRange(range));
-               // alert('add : '+insert_text);
-            }
-            if (action=='removeText'){
+            start_row = e.data.range.start.row;
+            start_col = e.data.range.start.column;
+            end_row = e.data.range.end.row;
+            end_col = e.data.range.end.column;
+            if (action==='removeText'){
                 remove_text = e.data.text;
-                //alert('remove: '+remove_text);
-            }
+                var ace_range = ace.require("ace/range").Range,
+                mine = new ace_range(0,0,end_row,end_col);
+                idx = NetPad.editor_session.getSession().getTextRange(mine).length;
+                NetPad.send_op('delete', idx+1);
 
-       // }
-    });
+                //e.preventDefault();
+            }
+        }
+    });*/
 });
 $(document).bind('connect', function (ev, data) {
     var conn = new Strophe.Connection(
