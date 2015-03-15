@@ -136,7 +136,7 @@ var OpTrans = {
             this.buffer.splice(pos, 0, ['\n']);
         }
 
-        this.update_func(this.buffer.join(''), remote);
+        this.update_func(op,chr,this.buffer.join(''), remote);
     },
 
     find_prev: function (state, last_idx) {

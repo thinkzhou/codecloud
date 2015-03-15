@@ -129,28 +129,23 @@ var NetPad = {
         chat.scrollTop = chat.scrollHeight;
     },
 
-    update_pad: function (buffer, remote) {
+    update_pad: function (op,chr,buffer, remote) {
         var old_row = NetPad.editor_session.selection.getCursor().row;
         var old_col = NetPad.editor_session.getSession().selection.getCursor().column;
         var old_buffer = NetPad.editor_session.getValue();
         NetPad.editor_session.setValue(buffer);
-        if (buffer.length > old_buffer.length && !remote) {
-            old_col=old_col+1;
-        }
-        if(remote){
-            NetPad.editor_session.getSession().selection.moveCursorTo(old_row,old_col,true);
-        }
-        else{
-            if(buffer.length > old_buffer.length){
-                //NetPad.editor_session.getSession().selection.moveCursorRight();
+        NetPad.editor_session.getSession().selection.moveCursorTo(old_row,old_col,false);
+        if(!remote){
+            if(op==='insert'){
+                NetPad.editor_session.getSession().selection.moveCursorRight();
             }
-            else{
-               // NetPad.editor_session.getSession().selection.moveCursorLeft();
+            else if(op==='breakline'){
+                old_row=old_row+1;
+                old_col=0;
+                NetPad.editor_session.getSession().selection.moveCursorTo(old_row,old_col,false);
             }
         }
         NetPad.editor_session.getSession().selection.clearSelection();
-        //$('#pad')[0].selectionStart = old_pos;
-        //$('#pad')[0].selectionEnd = old_pos;
     },
 
     send_op: function (op, pos, chr) {
@@ -261,6 +256,7 @@ $(document).ready(function () {
 
     });
     $('#get_value').click(function(event) {
+        NetPad.editor_session.getSession().selection.moveCursorLeft();
         ////alert(NetPad.editor_session.selection.getCursor().column);
     });
 
@@ -324,7 +320,6 @@ $(document).ready(function () {
         }
     });
     editor.container.addEventListener("keyup", function(e){
-        //alert(e.which);
         if (NetPad.collaborator) {
             row= NetPad.editor_session.getSession().selection.getCursor().row;
             col = NetPad.editor_session.getSession().selection.getCursor().column;
@@ -337,8 +332,11 @@ $(document).ready(function () {
                 NetPad.send_op('delete', idx);
                 e.preventDefault();
             }
+            else if (key_code===46){
+                NetPad.send_op('delete', idx);
+                e.preventDefault();
+            }
         }
-        return true;
     }, true);
     editor.container.addEventListener("keypress", function(e){
         row= NetPad.editor_session.getSession().selection.getCursor().row;
