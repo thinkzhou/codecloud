@@ -101,7 +101,7 @@ def register_success(request):
 
 def logout(request):
     auth.logout(request)
-    return HttpResponseRedirect('/cc/home/')
+    return HttpResponseRedirect('/cc/')
 
 
 def index(request):
@@ -109,10 +109,17 @@ def index(request):
     return render_to_response('cc/index.html', locals())
 
 
-@login_required
 def home(request):
     username = request.user.username
     return render_to_response('cc/home.html', locals())
+
+
+def problem_show(request):
+    return render_to_response('cc/problem_show.html', locals())
+
+
+def simple(request):
+    return render_to_response('cc/simple.html', locals())
 
 
 @login_required

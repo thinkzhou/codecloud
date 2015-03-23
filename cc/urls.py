@@ -25,4 +25,7 @@ urlpatterns = patterns(
     url(r'^ajax/get_jid/$', views.get_jid),
     url(r'^editor/$', views.editor),
     url(r'^faq/$', views.faq),
+    url(r'^problem_show/$', views.problem_show),
+
+    url(r'^simple/$', views.simple),
 )

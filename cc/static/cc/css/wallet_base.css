@@ -1,0 +1,191 @@
+﻿center {
+	clear: both;
+}
+
+
+footer {
+	margin-top: 10px;
+}
+
+.wallet_assist_word {
+	color: #666666;
+}
+
+.comment_and_collect {
+	margin-top: 5px;
+}
+
+.get_more {
+	margin: 20px 0 20px 0;
+}
+
+.span9 {
+	font-size: 15px;
+}
+
+.feed_event_time {
+	font-size: 12px;
+	color: #AAAAAA;
+}
+
+.index_footer {
+	margin-top: 200px;
+}
+
+#profile_portrait, .feedevent_portrait, .profile_following_img, .profile_followers_img {
+	height: 50px;
+	width: 50px;
+}
+
+#profile_window_portrait {
+	height: 80px;
+	width: 80px;
+}
+
+#profile_window_upload_new_portrait {
+	margin-top: 10px;
+}
+
+#settingsModalBody {
+	margin-left: 80px;
+}
+
+
+.profile_following_item span,  .profile_followers_item span {
+	margin-left: 20px;
+	font-size: 18px;
+}
+
+.profile_following_item span span, .profile_followers_item span span {
+	font-size: 12px;
+}
+
+.new_article_title {
+	width: 200px;
+}
+
+#article_author_portrait {
+	height: 80px;
+	width: 80px;
+}
+
+#article_title {
+	font-size: 25px;
+	margin-top: 30px;
+}
+
+#article_content {
+	font-size: 16px;
+	margin-top: 20px;
+}
+
+.comment_content {
+	font-size: 16px;
+}
+
+.comment_portrait {
+	height: 50px;
+	width:50px;
+}
+
+.tab-pane p {
+	margin-left: 30px;
+}
+
+.article_collect_btn {
+	margin-top: 20px;
+}
+
+.article_versions {
+	margin-top: 10px;
+}
+
+#update_new_bersion_btn {
+	margin-top: 
+}
+
+#article_reference_area {
+	margin-top: 15px;
+	margin-bottom: 10px;
+}
+
+.article_reference_label {
+	color:#666666;
+}
+
+.error_color{
+	color:red;
+}
+
+.reference_item {
+	margin-left: 20px;
+}
+
+#add_references_btn {
+	margin-bottom: 10px;
+}
+
+.username {
+font-size: 16px;
+margin: 3px 0 4px 0;
+}
+
+.post_time {
+display:none;	/* hide 2013年6月11日17:48:05 */
+float: right;
+margin-right: 20px;
+}
+
+/* 分页相关 */
+
+.pages_item  a:link,.pages_item  a:visited,.pages_item  a:active{
+	text-decoration:none;
+	color:#004BBB;
+	font-size:12px;
+}
+.pages_item  a:hover {
+	text-decoration:none;
+	color:#227AFF;
+	font-size:12px;
+}
+.pages_item_current  a:link,.pages_item_current  a:visited,.pages_item_current  a:active{
+	color:#FF0000;
+}
+.pages_item_current  a:hover {
+	color:#BB0000;
+}
+
+
+#pages_item_list{
+	margin-top:1em;
+}
+
+/* 分页跳转 */
+#pages_jump {
+	height:1em;
+	width:2em;
+	vertical-align:bottom;
+	margin-left:1em;
+	margin-bottom:5px;
+}
+
+#pages_jump_btn {
+	vertical-align:bottom;
+	margin-bottom:5px;
+}
+
+.img_logo{
+	height:8em;
+	width:8em;
+}
+
+.img_logo_head{
+	height:1.2em;
+	width:1.2em;
+	margin-bottom:0.2em;
+}
+
+/* 功能类 */
+.clear {
+	clear:both;
+}

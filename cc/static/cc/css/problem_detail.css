@@ -1,0 +1,61 @@
+.problem_detail_problemName {
+    font-size: 24px;
+    text-align: center;
+}
+
+.problem_detail_item_title {
+    height: 38px;
+    font-size: 22px;
+    padding: 0 0px;
+    color: #08C;
+    margin-top: 20px;
+    font-family: Arial;
+    font-weight: bold;
+}
+.mode{
+    margin-bottom: 0.8em;
+}
+.problem_detail_item_content {
+    font-size: 16px;
+    height: auto;
+    padding: 0 20px;
+    font-family: Times New Roman;
+    text-align: left;
+}
+
+.problem_detail_message {
+    color: #189F00;
+}
+
+.problem_detail_submit {
+}
+
+.problem_detail_language {
+    font-size: 20px;
+    margin-bottom: 1.2em;
+}
+
+.problem_detail_statistic {
+    font-size: 15px;
+    font-family: Arial;
+    font-weight: bold;
+    color: #1A5CC8
+}
+.shareIt {
+    margin-left: 77px;
+    position: absolute;
+    margin-top: 10px;
+}
+
+
+#CodeSplitter {
+    border: 5px solid #aaa;
+}
+.vsplitbar {
+    width: 5px;
+    height: 1000px;
+    background: #aaa;
+}
+
+
+
