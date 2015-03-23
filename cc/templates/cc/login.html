@@ -1,11 +1,24 @@
 {% extends "cc/base.html" %}
+{%load static%}
 
-{% block title %}Login{% endblock %}
+{% block title %}Log in{% endblock %}
+
+{%block ext_file%}
+<link rel='stylesheet' href="{% static 'cc/css/form-style.css' %}">
+{%endblock%}
+
 {% block content %}
-  <h1>Login</h1>
+  <div class="container form-signin">
+  <h3>Login</h3>
   <form action="" method="post">
-  {% csrf_token %}
-      {{ form.as_p }}
-      <input type="submit" value="Login">
+    {% csrf_token %}
+    <div class="form-group">
+        {{ form.as_p }}
+    </div>
+    <div class="form-group">
+        <button id="login_btn" class="btn btn-default btn-primary block-center" type="submit" >Login</button>
+    </div>
   </form>
+  </div>
 {% endblock %}
+

@@ -1,10 +1,101 @@
-{% block head %}
-{%endblock%}
+{%  load staticfiles %}
+<!DOCTYPE html>
+<html lang='zh-CN'>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src='{% static 'cc/js/jquery.js' %}'></script>
+    <script src='{% static 'cc/js/jquery-ui.js' %}'></script>
+    <link rel='stylesheet' href="{% static 'cc/plugins/jquery-ui/jquery-ui.css' %}">
+    <link rel='stylesheet' href="{% static 'cc/plugins/bootstrap/css/bootstrap-glyphicons.css' %}">
+    <link rel='stylesheet' href="{% static 'cc/plugins/bootstrap/css/bootstrap.min.css' %}">
+    <script src="{% static 'cc/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+    {% block ext_file %}
+    {%endblock%}
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    {% block body_head %}
+    <div class="navbar navbar-inverse navbar-extra">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/cc/">Code Cloud</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li id="problemsetNav"><a href="/cc/problemset/">Problems</a></li>
+            <li id=""><a href="/cc/discuss/">Discuss</a></li>
+            <li id="aboutNav"><a href="/cc/faq/">FAQ</a></li>
+            <li id="aboutNav"><a href="/cc/about/">Abouts</a></li>
+          </ul>
+          {% if request.user.username %}
+          <ul id="navBar-right" class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+            <a href="#" class="dropdown-toggle" style="margin-bottom:-5px" data-toggle="dropdown">
+              {{request.user.username}}
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="/cc/progress/">My Progress</a></li>
 
-{% block content %}
-{% endblock %}
+              <li><a href="/cc/discuss/user/thinkzhou">My Discuss</a></li>
+              <li><a href="/cc/profile/">Profile</a></li>
+              <li><a href="/cc/password/change/">Change Password</a></li>
+              <li class="divider"></li>
+              <li><a href="/cc/logout/">Sign out</a></li>
+            </ul>
+            </li>
+          </ul>
+          {%else%}
+              {%if username%}
+              <ul id="navBar-right" class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" style="margin-bottom:-5px" data-toggle="dropdown">
+                  {{username}}
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="/cc/progress/">My Progress</a></li>
 
-{% block  foot %}
-{%endblock%}
+                  <li><a href="/cc/discuss/user/thinkzhou">My Discuss</a></li>
+                  <li><a href="/cc/profile/">Profile</a></li>
+                  <li><a href="/cc/password/change/">Change Password</a></li>
+                  <li class="divider"></li>
+                  <li><a href="/cc/logout/">Sign out</a></li>
+                </ul>
+                </li>
+              </ul>
+              {%else%}
+              <ul id="navBar-right" class="nav navbar-nav navbar-right">
+                  <li><a href="/cc/login/">Sign in</a></li>
+                  <li><a href="/cc/register/">Register</a></li>
+              </ul>
+              {% endif %}
+          {%endif%}
+        </div>
+      </div>
+    </div>
+    {% endblock %}
 
+    {% block content %}
+    {% endblock %}
+
+    {% block  foot %}
+    <div class="container">
+      <hr>
+    </div>
+    <footer>
+    <p class="text-center">
+      <a href="/cc/faq/">Frequently Asked Questions</a> |
+      <a href="/cc/contant/">Terms of Service</a>
+    </p>
+    <p class="text-center">Copyright © 2015 CodeCloud</p>
+    </footer>
+    {%endblock%}
+</body>
+</html>
 

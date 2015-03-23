@@ -1,26 +1,47 @@
 {% extends "cc/base.html" %}
+{% load static %}
+
+{%block ext_file%}
+<link rel='stylesheet' href="{% static 'cc/css/prettify.css' %}">
+<link rel='stylesheet' href="{% static 'cc/css/problem-style.css' %}">
+{%endblock%}
+
 {%block content%}
+
 {%if problem%}
-<p><h2>Description</h2></p>
-<p>{{problem.problem_description|linebreaksbr}}</p>
 
-<p><h2>Input</h2></p>
-<p>{{problem.problem_input|linebreaksbr}}</p>
-
-<p><h2>Output</h2></p>
-<p>{{problem.problem_output|linebreaksbr}}</p>
-
-<p><h2>Sample Input</h2></p>
-<p>{{problem.problem_sample_input|linebreaksbr}}</p>
-
-<p><h2>Sample Output</h2></p>
-<p>{{problem.problem_sample_output|linebreaksbr}}</p>
-
-<p><h2>Hint</h2></p>
-<p>{{problem.problem_hint|linebreaksbr}}</p>
-
-<p><h2>Source</h2></p>
-<p>{{problem.problem_source|linebreaksbr}}</p>
+<div class="container">
+    <h1 class="page-title">{{problem.problem_name}}</h1>
+<div class="contest-info">
+    <p>
+        Time Limit: <span class="label label-warning">{{problem.probelm_time_limit }}s</span>
+        Memory Limit:<span class="label label-danger">{{problem.problem_memory_limit}}MB</span><br/>
+    </p>
+    <div>
+    Submissions: {{problem.problem_total_submissions}} Accept: {{problem.problem_accepted}}
+    </div>
+</div>
+<dl class="detail">
+    <dt>Description</dt>
+    <dd id="problem-desc">{{problem.problem_description}}</dd>
+    <dt>Input</dt>
+    <dd>{{problem.problem_input}}</dd>
+    <dt>Output</dt>
+    <dd>{{problem.problem_output|linebreaksbr}}</dd>
+    <dt>Sample Input</dt>
+    <dd>
+        <pre>{{problem.problem_sample_output|linebreaksbr}}</pre>
+    </dd>
+    <dt>Sample Output</dt>
+    <dd>
+        <pre>{{problem.problem_sample_output|linebreaksbr}}</pre>
+    </dd>
+    <dt>Hint</dt>
+    <dd>{{problem.problem_hint|linebreaksbr}}</dd>
+    <dt>Source</dt>
+    <dd>{{problem.problem_source|linebreaksbr}}</dd>
+</dl>
+</div>
 {%else%}
 <p>No problem available.</p>
 {%endif%}

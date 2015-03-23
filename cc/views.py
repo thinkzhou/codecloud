@@ -24,10 +24,10 @@ class UserForm(forms.Form):
 
 class passwordForm(forms.Form):
     current_password = forms.CharField(
-        label='current_password', widget=forms.PasswordInput()
+        label='current Password', widget=forms.PasswordInput()
     )
     new_password = forms.CharField(
-        label='new_password', widget=forms.PasswordInput()
+        label='new Password', widget=forms.PasswordInput()
     )
 
 
@@ -101,14 +101,11 @@ def register_success(request):
 
 def logout(request):
     auth.logout(request)
-    return HttpResponseRedirect('/cc/loggedout/')
-
-
-def loggedout(request):
-    return render_to_response('cc/loggedout.html')
+    return HttpResponseRedirect('/cc/home/')
 
 
 def index(request):
+    username = request.user.username
     return render_to_response('cc/index.html', locals())
 
 
@@ -219,10 +216,14 @@ def change_password(request):
     else:
         form = passwordForm()
     return render_to_response(
-        "cc/change_password.html", {'form': form},
+        "cc/change_password.html",
+        {'form': form, 'username': request.user.username},
         context_instance=RequestContext(request),
     )
 
+
+def faq(request):
+    return render_to_response('cc/faq.html')
 ###################################
 # xmpp pages
 ###################################
