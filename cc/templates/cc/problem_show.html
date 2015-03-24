@@ -10,113 +10,125 @@
 
 <script type="text/javascript" src="{% static 'cc/plugins/jqwidgets/jqwidgets/jqxtabs.js' %}"></script>
 
+<script type="text/javascript" src="{% static 'cc/plugins/jqwidgets/jqwidgets/jqxpanel.js' %}"></script>
 <script type="text/javascript" src="{% static 'cc/plugins/jqwidgets/scripts/demos.js' %}"></script>
-<link rel='stylesheet' href="{% static 'cc/plugins/bootstrap/css/bootstrap-responsive.css' %}">
+<!--
+<link rel='stylesheet' href="{% static 'cc/plugins/bootstrap/css/bootstrap-responsive.css' %}">-->
 <link rel='stylesheet' href="{% static 'cc/css/problem_detail.css' %}">
 
 <link rel='stylesheet' href="{% static 'cc/css/wallet_base.css' %}">
 
 <link rel='stylesheet' href="{% static 'cc/css/wallet_base.css' %}">
 
-<link rel='stylesheet' href="{% static 'cc/plugins/kitchen-sink/edit_code.css' %}">
   <script src='{% static 'cc/js/ace-editor/ace.js' %}'></script>
   <script src='{% static 'cc/js/ace-editor/ext-language_tools.js' %}'></script>
-
-    <script type="text/javascript">
+<link rel='stylesheet' href="{% static 'cc/css/problem-style.css' %}">
+{%endblock%}
+{%block content%}
+ <script type="text/javascript">
         $(document).ready(function () {
-            $('#splitContainer').jqxSplitter({theme: 'blackberry',height: '100%', width: '100%', panels: [
-                { collapsible: false, size: '40%',min:'20%'},
-                { size: '60%',min:'50%',collapsed: true}//
-            ] });
-            $('#splitter').jqxSplitter({theme: 'blackberry', width: '100%', orientation: 'horizontal', panels: [
-                { collapsible: false, size: '80%' },
-                { size: '20%' }
-            ] });
-            $("#tabs2").jqxTabs({  height: '100%', width: '100%' });
-            $("#tabs3").jqxTabs({  height: '100%', width: '100%' });
+            $('#mainSplitter').jqxSplitter({theme: 'blackberry', width: '100%', height: '100%', panels: [
+                    { size: '50%', min:'50%',collapsible: false},
+                    { size: '50%',max:'50'},
+                ]
+            });
+            $('#rightSplitter').jqxSplitter({ height: '100%', orientation: 'horizontal', panels: [{ size: '80%', collapsible: false }, { size: '20%'}] });
+            $('#jqxtabs').jqxTabs({ width: '100%', height: '100%' });
+            $('#mainSplitter').jqxSplitter('collapse');
+            var langTools = ace.require("ace/ext/language_tools");
+            var editor = ace.edit('editor-container');
+            editor.setTheme("ace/theme/monokai");
+            editor.getSession().setMode("ace/mode/c_cpp");
+            editor.setHighlightActiveLine(true);
+            editor.setOptions({
+              enableBasicAutocompletion: true,
+              enableLiveAutocompletion: true,
+              useElasticTabstops:true,
+            });
+            var rhymeCompleter = {
+                getCompletions: function(editor, session, pos, prefix, callback) {
+                    if (prefix.length === 0) { callback(null, []); return }
+                    $.getJSON(
+                        "http://127.0.0.1:8000/cc/data",
+                        function(wordList) {
+                            callback(null, wordList.map(function(ea) {
+                                return {name: ea.word, value: ea.word,}
+                            }));
+                        })
+                }
+            }
+            langTools.addCompleter(rhymeCompleter);
+            $('#open_editor').click(function(event) {
+                var s= $(this).text();
+                if(s==='Open Editor'){
+                    $(this).text('Close Editor');
+                    $('#mainSplitter').jqxSplitter('expand');
+                }
+                else{
+                    $(this).text('Open Editor');
+                    $('#mainSplitter').jqxSplitter('collapse');
+                }
+            });
         });
     </script>
     <style type="text/css">
-        html,body {
+        html, body
+        {
             height: 100%;
             width: 100%;
-            margin: 0px;
-            padding: 0px;
-            overflow: hidden;
-            position: relative;
         }
     </style>
-{%endblock%}
-
-{%block content%}
-<div style=" width: 100%;position: absolute;top: 50px;bottom: 0px">
-<div id="splitContainer" style="">
-    <div style="overflow: auto">
-        <div class="jqx-hideborder" id="tabs1" >
-            <div>
-                <h2 class="problem_detail_problemName">
-                    &nbspProblem：1001 计算天数
-                </h2>
-
-                <div class="problem_detail_message">
-                    <center>
-                        Time Limit : 2000/1000ms (Java/Other) &nbsp Memory Limit : 131072/65536K (Java/Other)<br>
-                        Total Submission(s) : 3 &nbsp Accepted Submission(s) : 0
-                    </center>
+    <div id="mainSplitter">
+        <div style="overflow: auto">
+            <h1 class="page-title">{{problem.problem_name}}</h1>
+            <div class="contest-info">
+                <p>
+                    Time Limit: <span class="label label-warning">{{problem.probelm_time_limit }}s</span>
+                    Memory Limit:<span class="label label-danger">{{problem.problem_memory_limit}}MB</span><br/>
+                </p>
+                <div>
+                Submissions: {{problem.problem_total_submissions}} Accept: {{problem.problem_accepted}}
                 </div>
-                <div class="span1"></div>
-                <div id="problem_detail_area">
-                    <ul>
-                        <li>
-                            <h3 class="problem_detail_item_title">Description</h3>
+            </div>
+            <ul class="detail">
+                <li>
+                    <h3 class="problem_detail_item_title">Description</h3>
+                    <div class="problem_detail_item_content">{{problem.problem_description}}</div>
+                </li>
 
-                            <div class="problem_detail_item_content">
-                                十进制正整数都可写成二进制的形式，如20可写成10100，如果我们把该二进制数10100的后面的2个0分离，可将10100分成两部分（101，00），即10100=101*22。现在101的十进制表示是5，称为10100的“基本部分”，而00用0的个数2是它的“指数部分”。于是十进制正整数20可表示为（5，2）。<br>
-                                你的任务是对一个十进制正整数n确定这样的表示。
-                            </div>
-                        </li>
-                        <li>
-                            <h3 class="problem_detail_item_title">Input</h3>
+                <li>
+                    <h3 class="problem_detail_item_title">Input</h3>
+                    <div class="problem_detail_item_content">{{problem.problem_input}}</div>
+                </li>
 
-                            <div class="problem_detail_item_content">
-                                输入有若干行，每行上有一个十进制整数n，1<=n<=65535。<br>
-                                输入直到文件结束。
-                            </div>
-                        </li>
-                        <li>
-                            <h3 class="problem_detail_item_title">Output</h3>
+                <li>
+                    <h3 class="problem_detail_item_title">Output</h3>
+                    <div class="problem_detail_item_content">{{problem.problem_output|linebreaksbr}}</div>
+                </li>
 
-                            <div class="problem_detail_item_content">对输入中每一行上的一个十进制正整数n，在一行上先输出n的基本部分，再输出指数部分，两者之间留一个空格。
-                            </div>
-                        </li>
-                        <li>
-                            <h3 class="problem_detail_item_title">Sample Input</h3>
+                <li>
+                    <h3 class="problem_detail_item_title">Sample Input</h3>
+                    <div class="problem_detail_item_content"><pre>{{problem.problem_sample_input|linebreaksbr}}</pre></div>
+                </li>
 
-                            <div class="problem_detail_item_content">
-                                12<br>
-                                16<br>
-                                131
-                            </div>
-                        </li>
-                        <li>
-                            <h3 class="problem_detail_item_title">Sample Output</h3>
+                <li>
+                    <h3 class="problem_detail_item_title">Sample Output</h3>
+                    <div class="problem_detail_item_content"><pre>{{problem.problem_sample_output|linebreaksbr}}</pre></div>
+                </li>
+                <li>
+                    <h3 class="problem_detail_item_title">Hint</h3>
+                    <div class="problem_detail_item_content">{{problem.problem_hint|linebreaksbr}}</div>
+                </li>
 
-                            <div class="problem_detail_item_content">
-                                3 2<br>
-                                1 4<br>
-                                131 0
-                            </div>
-                        </li>
-                        <li>
-                            <h3 class="problem_detail_item_title">Source</h3>
-
-                            <div class="problem_detail_item_content">None</div>
-                        </li>
-                    </ul>
-                    <div class="problem_detail_statistic">
+                <li>
+                    <h3 class="problem_detail_item_title">Source</h3>
+                    <div class="problem_detail_item_content">s{{problem.problem_source|linebreaksbr}}</div>
+                </li>
+            </ul>
+            <div class="problem_detail_statistic">
                         <hr class="bs-docs-separator">
                         <center>
-                            <a class="btn btn-primary" href="javascript:openEdit();">Open Editor</a>
+                            <button id ="open_editor" class="btn btn-primary">Open Editor</button>
                         </center>
                         <br>
                         <center>
@@ -124,111 +136,28 @@
                             <a href="#">Solutions</a>&nbsp;|&nbsp;
                             <a href="#">Note</a>
                         </center>
-                    </div>
-                </div>
-                <div class="span1"></div>
-                <hr class="bs-docs-separator">
             </div>
         </div>
-    </div>
-    <div>
-        <div id="splitter">
-            <div>
-                <div class="jqx-hideborder" id="tabs2">
-                    <ul>
-                        <li style="margin-left: 30px;">Code</li>
+        <div>
+            <div style="border: none;" id="rightSplitter">
+                <div id='jqxtabs'>
+                    <ul style='margin-left: 20px;'>
+                        <li>Code</li>
                         <li>Input</li>
                         <li>Output</li>
-                        <div id="optionsPanel">
-                            <table id="controls">
-                                <tr>
-                                    <td>
-                                        <select id="mode" class="span2" size="1">
-                                        <option>C/C++</option>
-                                        <option>Java</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        &nbsp;&nbsp;<a class="btn btn-info problem_detail_submit" id="codeTest">
-                                        Test
-                                    </a>
-                                    </td>
-                                    <td>
-                                        &nbsp;&nbsp;<a class="btn btn-primary problem_detail_submit" id="codeSubmit">
-                                        Submit
-                                    </a>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
                     </ul>
                     <div>
-
-                        <div id="text-edit" class="" style="position: relative;overflow-x: auto;overflow-y:auto">
-                            <div id="editor-container"></div>
-                        </div>
-                    </div>
-                    <div style="overflow: hidden">
-                        <textarea name="input_text" style="width: 100%;height: 100%">
-12
-16
-131
-                        </textarea>
+                        <div id ="editor-container" style="height:79%"></div>
                     </div>
                     <div>
-                        3 2<br>
-                        1 4<br>
-                        131 0
+                        <textarea name="input_text" style="width: 100%;height: 100%">{{problem.problem_sample_input|linebreaksbr}}</textarea>
+                    </div>
+                    <div>
+                        <textarea name="input_text" style="width: 100%;height: 100%">{{problem.problem_sample_output|linebreaksbr}}</textarea>
                     </div>
                 </div>
-            </div>
-            <div>
-                <div class="jqx-hideborder" id="tabs3">
-                    <ul>
-                        <li style="margin-left: 30px;">Debug</li>
-                        <li>Console</li>
-                    </ul>
-                    <div>
-                        No Bugs
-                    </div>
-                    <div>
-                        Content 2
-                    </div>
-                </div>
+                <div>Bottom-Right Panel</div>
             </div>
         </div>
     </div>
-</div>
-<script>
-    var langTools = ace.require("ace/ext/language_tools");
-    var editor = ace.edit('editor-container');
-    editor.setTheme("ace/theme/monokai");
-    editor.getSession().setMode("ace/mode/c_cpp");
-    editor.setHighlightActiveLine(true);
-    editor.setOptions({
-      enableBasicAutocompletion: true,
-      enableLiveAutocompletion: true,
-      useElasticTabstops:true,
-    });
-    var rhymeCompleter = {
-        getCompletions: function(editor, session, pos, prefix, callback) {
-            if (prefix.length === 0) { callback(null, []); return }
-            $.getJSON(
-                "http://127.0.0.1:8000/cc/data",
-                function(wordList) {
-                    callback(null, wordList.map(function(ea) {
-                        return {name: ea.word, value: ea.word,}
-                    }));
-                })
-        }
-    }
-    langTools.addCompleter(rhymeCompleter);
-</script>
-<script type="text/javascript" charset="utf-8">
-    //打开代码编辑器
-    function openEdit(){
-        $('#splitContainer').jqxSplitter('expand');
-    }
-</script>
-</div>
 {%endblock%}

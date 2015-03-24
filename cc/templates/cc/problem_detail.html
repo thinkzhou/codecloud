@@ -2,47 +2,162 @@
 {% load static %}
 
 {%block ext_file%}
-<link rel='stylesheet' href="{% static 'cc/css/prettify.css' %}">
+<link rel='stylesheet' href="{% static 'cc/plugins/jqwidgets/jqwidgets/styles/jqx.base.css' %}">
+<link rel='stylesheet' href="{% static 'cc/plugins/jqwidgets/jqwidgets/styles/jqx.blackberry.css' %}">
+
+<script type="text/javascript" src="{% static 'cc/plugins/jqwidgets/jqwidgets/jqxcore.js' %}"></script>
+<script type="text/javascript" src="{% static 'cc/plugins/jqwidgets/jqwidgets/jqxsplitter.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'cc/plugins/jqwidgets/jqwidgets/jqxtabs.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'cc/plugins/jqwidgets/jqwidgets/jqxpanel.js' %}"></script>
+<script type="text/javascript" src="{% static 'cc/plugins/jqwidgets/scripts/demos.js' %}"></script>
+<!--
+<link rel='stylesheet' href="{% static 'cc/plugins/bootstrap/css/bootstrap-responsive.css' %}">-->
+<link rel='stylesheet' href="{% static 'cc/css/problem_detail.css' %}">
+
+<link rel='stylesheet' href="{% static 'cc/css/wallet_base.css' %}">
+
+<link rel='stylesheet' href="{% static 'cc/css/wallet_base.css' %}">
+
+  <script src='{% static 'cc/js/ace-editor/ace.js' %}'></script>
+  <script src='{% static 'cc/js/ace-editor/ext-language_tools.js' %}'></script>
 <link rel='stylesheet' href="{% static 'cc/css/problem-style.css' %}">
 {%endblock%}
-
 {%block content%}
+ <script type="text/javascript">
+        $(document).ready(function () {
+            $('#mainSplitter').jqxSplitter({theme: 'blackberry', width: '100%', height: '100%', panels: [
+                    { size: '50%', min:'50%',collapsible: false},
+                    { size: '50%',max:'50'},
+                ]
+            });
+            $('#rightSplitter').jqxSplitter({ height: '100%', orientation: 'horizontal', panels: [{ size: '80%', collapsible: false }, { size: '20%'}] });
+            $('#jqxtabs').jqxTabs({ width: '100%', height: '100%' });
+            $('#mainSplitter').jqxSplitter('collapse');
+            var langTools = ace.require("ace/ext/language_tools");
+            var editor = ace.edit('editor-container');
+            editor.setTheme("ace/theme/monokai");
+            editor.getSession().setMode("ace/mode/c_cpp");
+            editor.setHighlightActiveLine(true);
+            editor.setOptions({
+              enableBasicAutocompletion: true,
+              enableLiveAutocompletion: true,
+              useElasticTabstops:true,
+            });
+            var rhymeCompleter = {
+                getCompletions: function(editor, session, pos, prefix, callback) {
+                    if (prefix.length === 0) { callback(null, []); return }
+                    $.getJSON(
+                        "http://127.0.0.1:8000/cc/data",
+                        function(wordList) {
+                            callback(null, wordList.map(function(ea) {
+                                return {name: ea.word, value: ea.word,}
+                            }));
+                        })
+                }
+            }
+            langTools.addCompleter(rhymeCompleter);
+            $('#open_editor').click(function(event) {
+                var s= $(this).text();
+                if(s==='Open Editor'){
+                    $(this).text('Close Editor');
+                    $('#mainSplitter').jqxSplitter('expand');
+                }
+                else{
+                    $(this).text('Open Editor');
+                    $('#mainSplitter').jqxSplitter('collapse');
+                }
+            });
+        });
+    </script>
+    <style type="text/css">
+        html, body
+        {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+    <div id="mainSplitter">
+        <div style="overflow: auto">
+            <h1 class="page-title">{{problem.problem_name}}</h1>
+            <div class="contest-info">
+                <p>
+                    Time Limit: <span class="label label-warning">{{problem.probelm_time_limit }}s</span>
+                    Memory Limit:<span class="label label-danger">{{problem.problem_memory_limit}}MB</span><br/>
+                </p>
+                <div>
+                Submissions: {{problem.problem_total_submissions}} Accept: {{problem.problem_accepted}}
+                </div>
+            </div>
+            <ul class="detail">
+                <li>
+                    <h3 class="problem_detail_item_title">Description</h3>
+                    <div class="problem_detail_item_content">{{problem.problem_description}}</div>
+                </li>
 
-{%if problem%}
+                <li>
+                    <h3 class="problem_detail_item_title">Input</h3>
+                    <div class="problem_detail_item_content">{{problem.problem_input}}</div>
+                </li>
 
-<div class="container">
-    <h1 class="page-title">{{problem.problem_name}}</h1>
-<div class="contest-info">
-    <p>
-        Time Limit: <span class="label label-warning">{{problem.probelm_time_limit }}s</span>
-        Memory Limit:<span class="label label-danger">{{problem.problem_memory_limit}}MB</span><br/>
-    </p>
-    <div>
-    Submissions: {{problem.problem_total_submissions}} Accept: {{problem.problem_accepted}}
+                <li>
+                    <h3 class="problem_detail_item_title">Output</h3>
+                    <div class="problem_detail_item_content">{{problem.problem_output|linebreaksbr}}</div>
+                </li>
+
+                <li>
+                    <h3 class="problem_detail_item_title">Sample Input</h3>
+                    <div class="problem_detail_item_content"><pre>{{problem.problem_sample_input|linebreaksbr}}</pre></div>
+                </li>
+
+                <li>
+                    <h3 class="problem_detail_item_title">Sample Output</h3>
+                    <div class="problem_detail_item_content"><pre>{{problem.problem_sample_output|linebreaksbr}}</pre></div>
+                </li>
+                <li>
+                    <h3 class="problem_detail_item_title">Hint</h3>
+                    <div class="problem_detail_item_content">{{problem.problem_hint|linebreaksbr}}</div>
+                </li>
+
+                <li>
+                    <h3 class="problem_detail_item_title">Source</h3>
+                    <div class="problem_detail_item_content">s{{problem.problem_source|linebreaksbr}}</div>
+                </li>
+            </ul>
+            <div class="problem_detail_statistic">
+                        <hr class="bs-docs-separator">
+                        <center>
+                            <button id ="open_editor" class="btn btn-primary">Open Editor</button>
+                        </center>
+                        <br>
+                        <center>
+                            <a href="#">Statistic</a>&nbsp;|&nbsp;
+                            <a href="#">Solutions</a>&nbsp;|&nbsp;
+                            <a href="#">Note</a>
+                        </center>
+            </div>
+        </div>
+        <div>
+            <div style="border: none;" id="rightSplitter">
+                <div id='jqxtabs'>
+                    <ul style='margin-left: 20px;'>
+                        <li>Code</li>
+                        <li>Input</li>
+                        <li>Output</li>
+                    </ul>
+                    <div>
+                        <div id ="editor-container" style="height:79%"></div>
+                    </div>
+                    <div>
+                        <textarea name="input_text" style="width: 100%;height: 100%">{{problem.problem_sample_input|linebreaksbr}}</textarea>
+                    </div>
+                    <div>
+                        <textarea name="input_text" style="width: 100%;height: 100%">{{problem.problem_sample_output|linebreaksbr}}</textarea>
+                    </div>
+                </div>
+                <div>Bottom-Right Panel</div>
+            </div>
+        </div>
     </div>
-</div>
-<dl class="detail">
-    <dt>Description</dt>
-    <dd id="problem-desc">{{problem.problem_description}}</dd>
-    <dt>Input</dt>
-    <dd>{{problem.problem_input}}</dd>
-    <dt>Output</dt>
-    <dd>{{problem.problem_output|linebreaksbr}}</dd>
-    <dt>Sample Input</dt>
-    <dd>
-        <pre>{{problem.problem_sample_output|linebreaksbr}}</pre>
-    </dd>
-    <dt>Sample Output</dt>
-    <dd>
-        <pre>{{problem.problem_sample_output|linebreaksbr}}</pre>
-    </dd>
-    <dt>Hint</dt>
-    <dd>{{problem.problem_hint|linebreaksbr}}</dd>
-    <dt>Source</dt>
-    <dd>{{problem.problem_source|linebreaksbr}}</dd>
-</dl>
-</div>
-{%else%}
-<p>No problem available.</p>
-{%endif%}
 {%endblock%}

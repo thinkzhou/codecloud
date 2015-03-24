@@ -13,6 +13,7 @@ urlpatterns = patterns(
     url(r'^add_problem/$', views.add_problem),
     url(r'^problemset/$', views.problem_list),
     url(r'^problem/(?P<problem_id>\d+)/$', views.problem_detail),
+    url(r'^problem_show/(?P<problem_id>\d+)/$', views.problem_show),
     url(r'^setting/$', views.setting),
     url(r'^password/change/$', views.change_password),
     url(r'^xmpp/$', views.xmpp),

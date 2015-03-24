@@ -114,10 +114,6 @@ def home(request):
     return render_to_response('cc/home.html', locals())
 
 
-def problem_show(request):
-    return render_to_response('cc/problem_show.html', locals())
-
-
 def simple(request):
     return render_to_response('cc/simple.html', locals())
 
@@ -191,6 +187,12 @@ def problem_list(request):
 def problem_detail(request, problem_id):
     problem = Problem.objects.get(pk=problem_id)
     return render_to_response('cc/problem_detail.html', locals())
+
+
+@login_required
+def problem_show(request, problem_id):
+    problem = Problem.objects.get(pk=problem_id)
+    return render_to_response('cc/problem_show.html', locals())
 
 
 @login_required

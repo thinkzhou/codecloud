@@ -1,3 +1,26 @@
+
+.problem_detail_item_title {
+    height: 38px;
+    font-size: 22px;
+    padding: 0 0px;
+    color: #08C;
+    margin-top: 20px;
+    font-family: Arial;
+    font-weight: bold;
+}
+.mode{
+    margin-bottom: 0.8em;
+}
+.problem_detail_item_content {
+    height: auto;
+    padding: 0 20px;
+    text-align: left;
+    margin: 1em 20px 1em;
+    font-size: 1.465em;
+    font-family: "minion-pro-1", "minion-pro-2", "Palatino", Georgia, "Times New Roman", serif;
+    line-height: 1.7em;
+}
+
 /* font page*/
 #front-guide ul li{
     list-style: none;
@@ -374,4 +397,49 @@ div.user-stats li.failed{
 .submit textarea {
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
     -moz-tab-size: 4; -o-tab-size: 4; tab-size: 4;
+}
+
+
+.problem_detail_message {
+    color: #189F00;
+}
+
+.problem_detail_submit {
+}
+
+.problem_detail_language {
+    font-size: 20px;
+    margin-bottom: 1.2em;
+}
+
+.problem_detail_statistic {
+    font-size: 15px;
+    font-family: Arial;
+    font-weight: bold;
+    color: #1A5CC8
+}
+.shareIt {
+    margin-left: 77px;
+    position: absolute;
+    margin-top: 10px;
+}
+
+
+#CodeSplitter {
+    border: 5px solid #aaa;
+}
+.vsplitbar {
+    width: 5px;
+    height: 1000px;
+    background: #aaa;
+}
+
+.ace_status-indicator {
+    color: gray;
+    position: absolute;
+    right: 0;
+    border-left: 1px solid;
+}
+.ace_gutter{
+    width: 41px;
 }
