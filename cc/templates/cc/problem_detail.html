@@ -34,7 +34,7 @@
             });
             $('#rightSplitter').jqxSplitter({ height: '100%', orientation: 'horizontal', panels: [{ size: '80%', collapsible: false }, { size: '20%'}] });
             $('#jqxtabs').jqxTabs({ width: '100%', height: '100%' });
-            $('#mainSplitter').jqxSplitter('collapse');
+            $('#jqxtabs_console').jqxTabs({ width: '100%', height: '100%' });
             var langTools = ace.require("ace/ext/language_tools");
             var editor = ace.edit('editor-container');
             editor.setTheme("ace/theme/monokai");
@@ -128,7 +128,7 @@
             <div class="problem_detail_statistic">
                         <hr class="bs-docs-separator">
                         <center>
-                            <button id ="open_editor" class="btn btn-primary">Open Editor</button>
+                            <button id ="open_editor" class="btn btn-primary">Close Editor</button>
                         </center>
                         <br>
                         <center>
@@ -145,6 +145,14 @@
                         <li>Code</li>
                         <li>Input</li>
                         <li>Output</li>
+                        <div style="margin-top:4px;">
+                            <select id="mode" class="span2" size="1">
+                                <option>C/C++</option>
+                                <option>Java</option>
+                            </select>
+                            <button id ="code_test" class="btn btn-info btn-xs" >Test</button>
+                            <button id ="code_submit" class="btn btn-primary btn-xs">Submit</button>
+                        </div>
                     </ul>
                     <div>
                         <div id ="editor-container" style="height:79%"></div>
@@ -156,7 +164,14 @@
                         <textarea name="input_text" style="width: 100%;height: 100%">{{problem.problem_sample_output|linebreaksbr}}</textarea>
                     </div>
                 </div>
-                <div>Bottom-Right Panel</div>
+                <div id='jqxtabs_console'>
+                    <ul style='margin-left: 20px;'>
+                        <li>Console</li>
+                    </ul>
+                    <div>
+                        <p name="input_text" style="width: 100%;height: 100%"></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
