@@ -173,7 +173,6 @@ var NetPad = {
     },
 
     process_op: function (op) {
-        //alert('process_op: '+op);
         var name = op.attr('name');
         var pos = parseInt(op.attr('pos'), 10);
         var chr = op.attr('char');
@@ -193,8 +192,16 @@ var NetPad = {
     }
 };
 $(document).ready(function () {
+    $('#mainSplitter').jqxSplitter({theme: 'blackberry', width: '100%', height: '100%', panels: [
+            { size: '50%', min:'50%',collapsible: false},
+            { size: '50%',max:'50'},
+        ]
+    });
+    $('#rightSplitter').jqxSplitter({ height: '100%', orientation: 'horizontal', panels: [{ size: '80%', collapsible: false }, { size: '20%'}] });
+    $('#jqxtabs').jqxTabs({ width: '100%', height: '100%' });
+    $('#jqxtabs_console').jqxTabs({ width: '100%', height: '100%' });
     var langTools = ace.require("ace/ext/language_tools");
-    var editor = ace.edit("editor");
+    var editor = ace.edit('editor-container');
     editor.setTheme("ace/theme/monokai");
     editor.getSession().setMode("ace/mode/c_cpp");
     editor.setHighlightActiveLine(true);
@@ -216,27 +223,25 @@ $(document).ready(function () {
         }
     }
     langTools.addCompleter(rhymeCompleter);
-    NetPad.editor_session = editor;
-    $('#login_dialog').dialog({
-        autoOpen: false,
-        draggable: false,
-        modal: true,
-        title: 'Connect to XMPP',
-        buttons: {
-            "Connect": function () {
-                $(document).trigger('connect', {
-                    jid: $('#jid').val(),
-                    password: $('#password').val(),
-                    collaborator: $('#collaborator').val()
-                });
-
-                $('#password').val('');
-                $(this).dialog('close');
-            }
+    $('#open_editor').click(function(event) {
+        var s= $(this).text();
+        if(s==='Open Editor'){
+            $(this).text('Close Editor');
+            $('#mainSplitter').jqxSplitter('expand');
+        }
+        else{
+            $(this).text('Open Editor');
+            $('#mainSplitter').jqxSplitter('collapse');
         }
     });
-    $('#open_login').click(function(){
-        $('#login_dialog').dialog('open');
+    NetPad.editor_session = editor;
+    $('#login').click(function(event) {
+        $(document).trigger('connect', {
+                jid: $('#local_jid').val(),
+                password: $('#local_password').val(),
+                collaborator: $('#collaborator_jid').val()
+        });
+        $('#myModal').modal('hide')
     });
     $('#get_jid').click(function(event) {
         name = $('#who').val();
@@ -255,11 +260,6 @@ $(document).ready(function () {
         })
 
     });
-    $('#get_value').click(function(event) {
-        NetPad.editor_session.getSession().selection.moveCursorLeft();
-        ////alert(NetPad.editor_session.selection.getCursor().column);
-    });
-
     $('#disconnect').click(function () {
         if (NetPad.collaborator) {
             NetPad.stop_collaboration(true);
@@ -288,35 +288,6 @@ $(document).ready(function () {
                 $msg({to: NetPad.collaborator, type: 'chat'})
                     .c('body').t(body));
             $(this).val('');
-        }
-    });
-    $('#pad').keydown(function (ev) {
-        if (NetPad.collaborator) {
-            var idx = this.selectionStart;
-            var handled = true;
-            if (ev.which === 8) {
-                this.selectionStart = idx - 1;
-                this.selectionEnd = idx - 1;
-                NetPad.send_op('delete', idx - 1);
-                ev.preventDefault();
-            } else if (ev.which === 46) {
-                NetPad.send_op('delete', idx);
-                ev.preventDefault();
-            }
-        }
-    });
-    $('#pad').keypress(function (ev) {
-        if (NetPad.collaborator) {
-            var idx = this.selectionStart;
-            var handled = true;
-            if(ev.which===13||ev.which===10){
-                NetPad.send_op('breakline', idx);
-                ev.preventDefault();
-            }else if ((ev.which >= 32 && ev.which <= 127) ||
-                       ev.which >= 256) {
-                NetPad.send_op('insert', idx, String.fromCharCode(ev.which));
-                ev.preventDefault();
-            }
         }
     });
     editor.container.addEventListener("keyup", function(e){
@@ -366,14 +337,12 @@ $(document).ready(function () {
             start_col = e.data.range.start.column;
             end_row = e.data.range.end.row;
             end_col = e.data.range.end.column;
-            //alert(action+':'+e.data.text);
         }
     });
 });
 $(document).bind('connect', function (ev, data) {
     var conn = new Strophe.Connection(
         "http://localhost:5280/http-bind");
-    alert(data.jid+":"+data.password);
     conn.connect(data.jid, data.password, function (status) {
         if (status === Strophe.Status.CONNECTED) {
             $.ajax({
@@ -457,5 +426,4 @@ $(document).bind('disconnected', function () {
         },
     })
     NetPad.connection = null;
-    $('#login_dialog').dialog('open');
 });

@@ -12,167 +12,160 @@
 
 <script type="text/javascript" src="{% static 'cc/plugins/jqwidgets/jqwidgets/jqxpanel.js' %}"></script>
 <script type="text/javascript" src="{% static 'cc/plugins/jqwidgets/scripts/demos.js' %}"></script>
-<!--
-<link rel='stylesheet' href="{% static 'cc/plugins/bootstrap/css/bootstrap-responsive.css' %}">-->
 <link rel='stylesheet' href="{% static 'cc/css/problem_detail.css' %}">
 
-<link rel='stylesheet' href="{% static 'cc/css/wallet_base.css' %}">
+<script src='{% static 'cc/js/ace-editor/ace.js' %}'></script>
+<script src='{% static 'cc/js/ace-editor/ext-language_tools.js' %}'></script>
 
-<link rel='stylesheet' href="{% static 'cc/css/wallet_base.css' %}">
-
-  <script src='{% static 'cc/js/ace-editor/ace.js' %}'></script>
-  <script src='{% static 'cc/js/ace-editor/ext-language_tools.js' %}'></script>
+<script src='{% static 'cc/js/ace_net.js' %}'></script>
 <link rel='stylesheet' href="{% static 'cc/css/problem-style.css' %}">
+
+<script src='{% static 'cc/js/strophe.js' %}'></script>
+<script src='{% static 'cc/js/optrans.js' %}'></script>
 {%endblock%}
+
 {%block content%}
- <script type="text/javascript">
-        $(document).ready(function () {
-            $('#mainSplitter').jqxSplitter({theme: 'blackberry', width: '100%', height: '100%', panels: [
-                    { size: '50%', min:'50%',collapsible: false},
-                    { size: '50%',max:'50'},
-                ]
-            });
-            $('#rightSplitter').jqxSplitter({ height: '100%', orientation: 'horizontal', panels: [{ size: '80%', collapsible: false }, { size: '20%'}] });
-            $('#jqxtabs').jqxTabs({ width: '100%', height: '100%' });
-            $('#jqxtabs_console').jqxTabs({ width: '100%', height: '100%' });
-            var langTools = ace.require("ace/ext/language_tools");
-            var editor = ace.edit('editor-container');
-            editor.setTheme("ace/theme/monokai");
-            editor.getSession().setMode("ace/mode/c_cpp");
-            editor.setHighlightActiveLine(true);
-            editor.setOptions({
-              enableBasicAutocompletion: true,
-              enableLiveAutocompletion: true,
-              useElasticTabstops:true,
-            });
-            var rhymeCompleter = {
-                getCompletions: function(editor, session, pos, prefix, callback) {
-                    if (prefix.length === 0) { callback(null, []); return }
-                    $.getJSON(
-                        "http://127.0.0.1:8000/cc/data",
-                        function(wordList) {
-                            callback(null, wordList.map(function(ea) {
-                                return {name: ea.word, value: ea.word,}
-                            }));
-                        })
-                }
-            }
-            langTools.addCompleter(rhymeCompleter);
-            $('#open_editor').click(function(event) {
-                var s= $(this).text();
-                if(s==='Open Editor'){
-                    $(this).text('Close Editor');
-                    $('#mainSplitter').jqxSplitter('expand');
-                }
-                else{
-                    $(this).text('Open Editor');
-                    $('#mainSplitter').jqxSplitter('collapse');
-                }
-            });
-        });
-    </script>
-    <style type="text/css">
-        html, body
-        {
-            height: 100%;
-            width: 100%;
-        }
-    </style>
-    <div id="mainSplitter">
-        <div style="overflow: auto">
-            <h1 class="page-title">{{problem.problem_name}}</h1>
-            <div class="contest-info">
-                <p>
-                    Time Limit: <span class="label label-warning">{{problem.probelm_time_limit }}s</span>
-                    Memory Limit:<span class="label label-danger">{{problem.problem_memory_limit}}MB</span><br/>
-                </p>
-                <div>
-                Submissions: {{problem.problem_total_submissions}} Accept: {{problem.problem_accepted}}
-                </div>
-            </div>
-            <ul class="detail">
-                <li>
-                    <h3 class="problem_detail_item_title">Description</h3>
-                    <div class="problem_detail_item_content">{{problem.problem_description}}</div>
-                </li>
 
-                <li>
-                    <h3 class="problem_detail_item_title">Input</h3>
-                    <div class="problem_detail_item_content">{{problem.problem_input}}</div>
-                </li>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Login</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="local_jid_label" class="control-label">Jid:</label>
+            <input type="text" class="form-control" id="local_jid" value="zhouyang@localhost">
+          </div>
+          <div class="form-group">
+            <label for="password_label" class="control-label">Password:</label>
+            <input type="password" class="form-control" id="local_password" value="12345678">
+          </div>
+          <div class="form-group">
+            <label for="collaborator_jid_label" class="control-label">Collaborator:</label>
+            <input type="text" class="form-control" id="collaborator_jid">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id = "login" class="btn btn-primary">Login</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-                <li>
-                    <h3 class="problem_detail_item_title">Output</h3>
-                    <div class="problem_detail_item_content">{{problem.problem_output|linebreaksbr}}</div>
-                </li>
-
-                <li>
-                    <h3 class="problem_detail_item_title">Sample Input</h3>
-                    <div class="problem_detail_item_content"><pre>{{problem.problem_sample_input|linebreaksbr}}</pre></div>
-                </li>
-
-                <li>
-                    <h3 class="problem_detail_item_title">Sample Output</h3>
-                    <div class="problem_detail_item_content"><pre>{{problem.problem_sample_output|linebreaksbr}}</pre></div>
-                </li>
-                <li>
-                    <h3 class="problem_detail_item_title">Hint</h3>
-                    <div class="problem_detail_item_content">{{problem.problem_hint|linebreaksbr}}</div>
-                </li>
-
-                <li>
-                    <h3 class="problem_detail_item_title">Source</h3>
-                    <div class="problem_detail_item_content">s{{problem.problem_source|linebreaksbr}}</div>
-                </li>
-            </ul>
-            <div class="problem_detail_statistic">
-                        <hr class="bs-docs-separator">
-                        <center>
-                            <button id ="open_editor" class="btn btn-primary">Close Editor</button>
-                        </center>
-                        <br>
-                        <center>
-                            <a href="#">Statistic</a>&nbsp;|&nbsp;
-                            <a href="#">Solutions</a>&nbsp;|&nbsp;
-                            <a href="#">Note</a>
-                        </center>
+<style type="text/css">
+    html, body
+    {
+        height: 100%;
+        width: 100%;
+    }
+</style>
+<div id="mainSplitter">
+    <div style="overflow: auto">
+        <div id='status' class='no-collab'>
+            Not collaborating.
+        </div>
+        <h1 class="page-title">{{problem.problem_name}}</h1>
+        <div class="contest-info">
+            <p>
+                Time Limit: <span class="label label-warning">{{problem.probelm_time_limit }}s</span>
+                Memory Limit:<span class="label label-danger">{{problem.problem_memory_limit}}MB</span><br/>
+            </p>
+            <div>
+            Submissions: {{problem.problem_total_submissions}} Accept: {{problem.problem_accepted}}
             </div>
         </div>
-        <div>
-            <div style="border: none;" id="rightSplitter">
-                <div id='jqxtabs'>
-                    <ul style='margin-left: 20px;'>
-                        <li>Code</li>
-                        <li>Input</li>
-                        <li>Output</li>
-                        <div style="margin-top:4px;">
-                            <select id="mode" class="span2" size="1">
-                                <option>C/C++</option>
-                                <option>Java</option>
-                            </select>
-                            <button id ="code_test" class="btn btn-info btn-xs" >Test</button>
-                            <button id ="code_submit" class="btn btn-primary btn-xs">Submit</button>
-                        </div>
-                    </ul>
-                    <div>
-                        <div id ="editor-container" style="height:79%"></div>
+        <ul class="detail">
+            <li>
+                <h3 class="problem_detail_item_title">Description</h3>
+                <div class="problem_detail_item_content">{{problem.problem_description}}</div>
+            </li>
+
+            <li>
+                <h3 class="problem_detail_item_title">Input</h3>
+                <div class="problem_detail_item_content">{{problem.problem_input}}</div>
+            </li>
+
+            <li>
+                <h3 class="problem_detail_item_title">Output</h3>
+                <div class="problem_detail_item_content">{{problem.problem_output|linebreaksbr}}</div>
+            </li>
+
+            <li>
+                <h3 class="problem_detail_item_title">Sample Input</h3>
+                <div class="problem_detail_item_content"><pre>{{problem.problem_sample_input|linebreaksbr}}</pre></div>
+            </li>
+
+            <li>
+                <h3 class="problem_detail_item_title">Sample Output</h3>
+                <div class="problem_detail_item_content"><pre>{{problem.problem_sample_output|linebreaksbr}}</pre></div>
+            </li>
+            <li>
+                <h3 class="problem_detail_item_title">Hint</h3>
+                <div class="problem_detail_item_content">{{problem.problem_hint|linebreaksbr}}</div>
+            </li>
+
+            <li>
+                <h3 class="problem_detail_item_title">Source</h3>
+                <div class="problem_detail_item_content">s{{problem.problem_source|linebreaksbr}}</div>
+            </li>
+        </ul>
+        <div class="problem_detail_statistic">
+                    <hr class="bs-docs-separator">
+                    <center>
+                        <button id ="open_editor" class="btn btn-primary">Close Editor</button>
+                    </center>
+                    <br>
+                    <center>
+                        <a href="#">Statistic</a>&nbsp;|&nbsp;
+                        <a href="#">Solutions</a>&nbsp;|&nbsp;
+                        <a href="#">Note</a>
+                    </center>
+        </div>
+    </div>
+    <div>
+        <div style="border: none;" id="rightSplitter">
+            <div id='jqxtabs'>
+                <ul style='margin-left: 20px;'>
+                    <li>Code</li>
+                    <li>Input</li>
+                    <li>Output</li>
+                    <div style="margin-top:4px;">
+                        <select id="mode" class="span2" size="1">
+                            <option>C/C++</option>
+                            <option>Java</option>
+                        </select>
+                        <button id ="code_test" class="btn btn-info btn-xs" >Test</button>
+                        <button id ="code_submit" class="btn btn-primary btn-xs">Submit</button>
+                        <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal">Login
+                        </button>
+                        <button id ="disconnect" disabled='disabled' class="btn btn-primary btn-xs">Disconnect</button>
                     </div>
-                    <div>
-                        <textarea name="input_text" style="width: 100%;height: 100%">{{problem.problem_sample_input|linebreaksbr}}</textarea>
-                    </div>
-                    <div>
-                        <textarea name="input_text" style="width: 100%;height: 100%">{{problem.problem_sample_output|linebreaksbr}}</textarea>
-                    </div>
+                </ul>
+                <div>
+                    <div id ="editor-container" style="height:79%"></div>
                 </div>
-                <div id='jqxtabs_console'>
-                    <ul style='margin-left: 20px;'>
-                        <li>Console</li>
-                    </ul>
-                    <div>
-                        <p name="input_text" style="width: 100%;height: 100%"></p>
-                    </div>
+                <div>
+                    <textarea name="input_text" style="width: 100%;height: 100%">{{problem.problem_sample_input|linebreaksbr}}</textarea>
+                </div>
+                <div>
+                    <textarea name="input_text" style="width: 100%;height: 100%">{{problem.problem_sample_output|linebreaksbr}}</textarea>
+                </div>
+            </div>
+            <div id='jqxtabs_console'>
+                <ul style='margin-left: 20px;'>
+                    <li>Console</li>
+                </ul>
+                <div>
+                    <p name="input_text" style="width: 100%;height: 100%"></p>
                 </div>
             </div>
         </div>
     </div>
+</div>
 {%endblock%}
