@@ -58,7 +58,7 @@ var NetPad = {
 
             NetPad.connection.send(msg);
         } else {
-            $('#pad').removeAttr('disabled');
+
         }
     },
 
@@ -73,7 +73,6 @@ var NetPad = {
                 } else {
                     var command = collab[0].tagName;
                     if (command === "start") {
-                        //$('#pad').val(collab.text());
                         NetPad.editor_session.setValue(collab.text());
                         NetPad.start_collaboration();
                     } else if (command === "stop") {
@@ -243,22 +242,21 @@ $(document).ready(function () {
         });
         $('#myModal').modal('hide')
     });
-    $('#get_jid').click(function(event) {
-        name = $('#who').val();
+    $('#collaborator_name').change(function(event) {
+        collaborator_name=$('#collaborator_name').val();
         $.ajax({
             url: '/cc/ajax/get_jid/',
             type: 'POST',
             dataType: 'json',
-            data: {'name': name},
+            data: {'name': collaborator_name},
         })
         .done(function(data) {
             jid = data['jid'];
             if (jid){
-                $('#collaborator').val(jid);
-                $('#jid').val('zhounima@localhost');
+                $('#collaborator_jid').val(jid);
+                $('#local_jid').val('zhounima@localhost');
             }
         })
-
     });
     $('#disconnect').click(function () {
         if (NetPad.collaborator) {
@@ -403,8 +401,6 @@ $(document).bind('connected', function () {
             });
     } else {
         NetPad.master = true;
-
-        $('#pad').removeAttr('disabled');
 
         // handle incoming discovery and collaboration requestsb
         NetPad.connection.addHandler(NetPad.on_disco_info,
