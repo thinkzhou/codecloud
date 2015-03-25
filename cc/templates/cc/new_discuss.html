@@ -1,0 +1,33 @@
+{% extends "cc/base.html" %}
+{% load static %}
+
+{%block content%}
+
+<div class="container">
+    <form class="new-topic form-horizontal" action="" method="POST">
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="pid">Problem ID</label>
+            <div class="col-sm-5">
+                <input class="form-control" type="text" name="pid" id="pid"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="title">Title</label>
+            <div class="col-sm-5">
+                <input class="form-control" type="text" name="title" id="title"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="content">Content</label>
+            <div class="col-sm-5">
+                <textarea class="form-control" rows="10" cols="10" id="content" name="content"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-6 col-sm-7">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+{%endblock%}

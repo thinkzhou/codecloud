@@ -1,0 +1,48 @@
+{% extends "cc/base.html" %}
+{% load static %}
+
+{%block content%}
+<div class="container">
+    <ul class="breadcrumb">
+        <li>
+        <a href="/cc/discuss">Discuss</a>
+        </li>
+    </ul>
+    <form class="form-inline well" role="form" action="/discuss" method="GET">
+        <div class="form-group">
+            <label class="sr-only" for="pid">Problem</label>
+            <input placeholder="Problem" name="pid" id="pid" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <label class="sr-only" for="uid">User</label>
+            <input placeholder="User" name="uid" id="uid" class="form-control"/>
+        </div>
+        <input type="submit" value="Filter" class="btn btn-default">
+        <a href="/cc/discuss/new" class="btn btn-info pull-right">New Topic</a>
+    </form>
+    <hr class="clearfix"/>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th class="col-sm-1">Problem</th>
+            <th>Title</th>
+            <th class="col-sm-2">Author</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+            <td>
+                <a href="/problem/show/1012" style="color: #000000"> 1012 </a>
+            </td>
+            <td>
+                <a href="#"><strong>求思路</strong></a>
+            </td>
+            <td>
+                <a href="#">zhouyang</a>
+            </td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+{%endblock%}

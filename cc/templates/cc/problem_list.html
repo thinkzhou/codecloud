@@ -1,76 +1,39 @@
 {% extends "cc/base.html" %}
 
 {%block content %}
-    <div class="row">
-    <div class="col-md-offset-1 col-md-8 blog-main">
-      <div id="searchResultRow" class="row" style="display:none">
-        <table id="searchResult" class="table table-striped table-centered">
-          <thead>
-            <tr>
-              <th class="header-status">
-              </th>
-              <th class="header-id">
-                <div id="searchIdBtn" class="" order='asc'><a href="#" onclick="ga('send', 'event', 'search-title-id', 'click');">#</a></div>
-              </th>
-              <th class="header-title">
-                <div id="searchTitleBtn" class="" order='asc'><a href="#" onclick="ga('send', 'event', 'search-title-sort', 'click');">Title</a></div>
-              </th>
-              <th class="header-ac">
-                <div id="searchAcrateBtn" class="" order='asc'><a href="#" onclick="ga('send', 'event', 'search-acrate-sort', 'click');">Acceptance</a></div>
-              </th>
-
-              <th class="header-level">
-                <div id="searchLevelBtn" class="" order='asc'><a href="#" onclick="ga('send', 'event', 'search-difficulty-sort', 'click');">Difficulty</a></div>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-      </div>
-      <div id="problemListRow" class="row">
-        <table id="problemList" class="table table-striped table-centered">
-          <thead>
-            <tr>
-              <th class="header-status">
-              </th>
-              <th class="header-id">
-                <div id="idBtn" class="" order='asc'><a href="#" onclick="ga('send', 'event', 'title-id', 'click');">#</a></div>
-              </th>
-              <th class="header-title">
-                <div id="titleBtn" class="" order='asc'><a href="#" onclick="ga('send', 'event', 'title-sort', 'click');">Title</a></div>
-              </th>
-              <th class="header-ac">
-                <div id="acrateBtn" class="" order='asc'><a href="#" onclick="ga('send', 'event', 'acrate-sort', 'click');">Acceptance</a></div>
-              </th>
-
-              <th class="header-level">
-                <div id="levelBtn" class="" order='asc'><a href="#" onclick="ga('send', 'event', 'difficulty-sort', 'click');">Difficulty</a></div>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {%if problems %}
-                {%for problem in problems%}
-                <tr>
-                  <td>
-                    <span class="None"> </span>
-                  </td>
-                  <td>{{problem.id}}</td>
-                    <td><a href='/cc/problem/{{problem.id}}'>{{problem.problem_name}}</a>
-                    </td>
-                  <td>{{problem.problem_accepted}}/{{problem.problem_total_submissions}}</td>
-                  <td value='2'>Medium</td>
-                </tr>
-            {%endfor%}
-            {%else%}
-            <p>No problem available.</p>
-            {%endif%}
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="col-md-3 blog-sidebar">
-    </div>
+<div class="container">
+  <ul class="pagination problem-pagination">
+    <li class="active"><a href="/cc/problem/list/">1</a></li>
+    <li><a href="/cc/problem/list">2</a></li>
+    <li><a href="/cc/problem/list">3</a></li>
+    <li><a href="/cc/problem/list">4</a></li>
+    <li><a href="/cc/problem/list">5</a></li>
+    <li><a href="/cc/problem/list">6</a></li>
+    <li><a href="/cc/problem/list">7</a></li>
+    <li><a href="/cc/problem/list">8</a></li>
+    <li><a href="/cc/problem/list">9</a></li>
+    <li><a href="/cc/problem/list">10</a></li>
+    <li><a href="/cc/problem/list">11</a></li>
+    <li><a href="/cc/problem/list">12</a></li>
+    <li><a href="/cc/problem/list">13</a></li>
+  </ul>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Ratio(AC/Submit)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%for problem in problems%}
+      <tr>
+          <td class="pid ">{{problem.id}}</td>
+          <td class="ptitle"><a href='/cc/problem/show/{{problem.id}}'>{{problem.problem_name}}</a></td>
+          <td>{{problem.problem_accepted}}/{{problem.problem_total_submissions}}</td>
+      </tr>
+      {%endfor%}
+    </tbody>
+  </table>
 </div>
 {% endblock %}

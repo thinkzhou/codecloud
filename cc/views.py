@@ -231,8 +231,24 @@ def change_password(request):
     )
 
 
+@login_required
+def discuss(request):
+    username = request.user.username
+    return render_to_response('cc/discuss.html', locals())
+
+
+@login_required
+def new_discuss(request):
+    username = request.user.username
+    return render_to_response('cc/new_discuss.html', locals())
+
+
 def faq(request):
     return render_to_response('cc/faq.html')
+
+
+def about(request):
+    return render_to_response('cc/about.html')
 ###################################
 # xmpp pages
 ###################################
@@ -261,10 +277,11 @@ def netpad(request):
 def dig(request):
     return render_to_response('cc/dig.html')
 
-
 ###################################
 # API for data exchanging
 ###################################
+
+
 def get_data(request):
     cpp_keyword = [
         "asm", "do", "if", "return", "typedef", "auto", "double", "inline",
