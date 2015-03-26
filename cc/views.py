@@ -11,6 +11,7 @@ from django.contrib.auth.hashers import check_password
 
 from cc.models import Problem
 from cc.core.utils import *
+from core.compile import Base_Compiler
 
 ###################################
 # forms
@@ -336,6 +337,28 @@ def get_jid(request):
         data['jid'] = jid
     else:
         data['jid'] = ''
+    return HttpResponse(
+        json.dumps(data),
+        content_type="application/json"
+    )
+
+
+@login_required
+@csrf_exempt
+def test_code(request):
+    code = request.POST.get('code', '')
+    data_input = request.POST.get('data_input', '')
+    problem_id = request.POST.get('problem_id', '')
+    data = {}
+    if code and data_input and problem_id:
+        file_path = '/Users/zhouyang/work/temp/'
+        code_file = file_path + problem_id + '.cpp'
+        input_file = file_path + problem_id + '.in'
+        a = save_file(code, code_file)
+        b = save_file(data_input, input_file)
+        cp = Base_Compiler(code_file)
+        data['return_code'], data['stdout'], data[
+            'stderr'] = cp.build_and_run(input_file)
     return HttpResponse(
         json.dumps(data),
         content_type="application/json"

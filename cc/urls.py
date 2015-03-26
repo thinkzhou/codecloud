@@ -23,6 +23,7 @@ urlpatterns = patterns(
     url(r'^dig/$', views.dig),
     url(r'^ajax/update_jid/$', views.update_jid),
     url(r'^ajax/get_jid/$', views.get_jid),
+    url(r'^ajax/test_code/$', views.test_code),
     url(r'^editor/$', views.editor),
     url(r'^faq/$', views.faq),
     url(r'^about/$', views.about),

@@ -81,3 +81,12 @@ def get_current_jid(username):
     except Exception:
         pass
     return ''
+
+
+def save_file(content, file_name):
+    try:
+        with open(file_name, 'w') as f:
+            f.write(content)
+        return True
+    except Exception:
+        return False

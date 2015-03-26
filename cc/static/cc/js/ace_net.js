@@ -258,6 +258,29 @@ $(document).ready(function () {
             }
         })
     });
+    $('#code_test').click(function(event) {
+        $.ajax({
+            url: '/cc/ajax/test_code/',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'code': NetPad.editor_session.getValue(),
+                'data_input':$('#input_text').val(),
+                'problem_id':'1',
+            },
+        })
+        .done(function(data) {
+            return_code = data['return_code'];
+            stdout = data['stdout'];
+            stderr=data['stderr'];
+            if (return_code === 0){
+                $('#output_text').val(stdout);
+            }
+            else{
+                $('#output_text').val('return_code='+return_code+'\n'+stderr);
+            }
+        })
+    });
     $('#disconnect').click(function () {
         if (NetPad.collaborator) {
             NetPad.stop_collaboration(true);

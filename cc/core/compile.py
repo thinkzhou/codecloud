@@ -26,7 +26,7 @@ class Base_Compiler(object):
         '''
         build the source code and retrun return_code, stdout,stderr
         '''
-        if self.file_type == 'c':  # c/cpp
+        if self.file_type in ('c', 'cpp'):  # c/cpp
             cmd = [
                 'g++',
                 '-o',
@@ -51,7 +51,7 @@ class Base_Compiler(object):
         try:
             with open(data_file, 'rt') as f:
                 STDIN = f.read()
-            if self.file_type == 'c':
+            if self.file_type in ('c', 'cpp'):
                 cmd = [self.executable_file]
             else:
                 cmd = [
