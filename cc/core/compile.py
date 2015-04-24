@@ -28,7 +28,7 @@ class Base_Compiler(object):
         '''
         if self.file_type in ('c', 'cpp'):  # c/cpp
             cmd = [
-                'g++',
+                'g++-4.9',
                 '-o',
                 self.executable_file,
                 self.source,

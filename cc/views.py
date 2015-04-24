@@ -354,8 +354,8 @@ def test_code(request):
         file_path = '/Users/zhouyang/work/temp/'
         code_file = file_path + problem_id + '.cpp'
         input_file = file_path + problem_id + '.in'
-        a = save_file(code, code_file)
-        b = save_file(data_input, input_file)
+        save_file(code, code_file)
+        save_file(data_input, input_file)
         cp = Base_Compiler(code_file)
         data['return_code'], data['stdout'], data[
             'stderr'] = cp.build_and_run(input_file)
