@@ -12,7 +12,7 @@ from django.contrib.auth.hashers import check_password
 from cc.models import Problem
 from cc.core.utils import *
 from core.compile import Base_Compiler
-
+from core.compile2 import CodeComplie
 ###################################
 # forms
 ###################################
