@@ -270,15 +270,12 @@ $(document).ready(function () {
             },
         })
         .done(function(data) {
-            return_code = data['return_code'];
-            stdout = data['stdout'];
-            stderr=data['stderr'];
-            if (return_code === 0){
-                $('#output_text').val(stdout);
-            }
-            else{
-                $('#output_text').val('return_code='+return_code+'\n'+stderr);
-            }
+            build_msg = data['build_msg'];
+            run_msg = data['run_msg'];
+            output = data['output'];
+            $('#output_text').val(output);
+            console_msg = build_msg+run_msg;
+            $('#console').text(console_msg);
         })
     });
     $('#disconnect').click(function () {

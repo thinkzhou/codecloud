@@ -8,11 +8,9 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib.auth.hashers import check_password
-
-from cc.models import Problem
 from cc.core.utils import *
-from core.compile import Base_Compiler
-from core.compile2 import CodeComplie
+from cc.models import Problem
+from core.compile2 import Judge
 ###################################
 # forms
 ###################################
@@ -346,19 +344,15 @@ def get_jid(request):
 @login_required
 @csrf_exempt
 def test_code(request):
+    username = request.user.username
     code = request.POST.get('code', '')
     data_input = request.POST.get('data_input', '')
     problem_id = request.POST.get('problem_id', '')
     data = {}
     if code and data_input and problem_id:
-        file_path = '/Users/zhouyang/work/temp/'
-        code_file = file_path + problem_id + '.cpp'
-        input_file = file_path + problem_id + '.in'
-        save_file(code, code_file)
-        save_file(data_input, input_file)
-        cp = Base_Compiler(code_file)
-        data['return_code'], data['stdout'], data[
-            'stderr'] = cp.build_and_run(input_file)
+        code_name = username + problem_id + '.cpp'
+        data['build_msg'], data['run_msg'], data[
+            'output'] = Judge(code, code_name, data_input)
     return HttpResponse(
         json.dumps(data),
         content_type="application/json"
