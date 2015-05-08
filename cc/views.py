@@ -313,6 +313,7 @@ def update_jid(request):
     state = request.POST.get('state', '') == 'true'
     result = False
     if jid:
+        print 'updating jid', jid, state
         result = update_profile(
             username=user.username,
             jid=jid,
@@ -332,6 +333,7 @@ def get_jid(request):
     if (username):
         # select from database
         jid = get_current_jid(username=username)
+        print 'get jid', jid
         data['jid'] = jid
     else:
         data['jid'] = ''

@@ -66,9 +66,6 @@
 </style>
 <div id="mainSplitter">
     <div style="overflow: auto">
-        <div id='status' class='no-collab'>
-            Not collaborating.
-        </div>
         <h1 class="page-title">{{problem.problem_name}}</h1>
         <div class="contest-info">
             <p>
@@ -128,7 +125,7 @@
         </div>
     </div>
     <div>
-        <div style="border: none;" id="rightSplitter">
+        <div id="rightSplitter">
             <div id='jqxtabs'>
                 <ul style='margin-left: 20px;'>
                     <li>Code</li>
@@ -155,16 +152,23 @@
             <div id='jqxtabs_console'>
                 <ul style='margin-left: 20px;'>
                     <li>Console</li>
-                    <div style="margin-top:4px;">
-                        <input type="text" id="collaborator_name">
-                        <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal">Login
-                        </button>
-                        <button id ="disconnect" disabled='disabled' class="btn btn-primary btn-xs">Disconnect</button>
-                    </div>
+                    <li>
+                        <div style="margin-top:4px;">
+                            <input type="text" id="collaborator_name">
+                            <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal">Login
+                            </button>
+                            <button id ="disconnect" disabled='disabled' class="btn btn-primary btn-xs">Disconnect</button>
+                        </div>
+                    </li>
+                    <li>
+                        <div id='status' class='no-collab'>Not collaborating.</div>
+                    </li>
                 </ul>
                 <div>
-                    <div id="console" naem='console' style="width: 100%;height: 100%"></div>
+                    <div id="console" name='console' style="width: 100%;height: 100%"></div>
                 </div>
+                <div></div>
+                <div></div>
             </div>
         </div>
     </div>
