@@ -1,1 +1,10 @@
+{% extends "cc/base.html" %}
+{%load static%}
+{% block title %}Create an account{% endblock %}
+{%block ext_file%}
+<link rel='stylesheet' href="{% static 'cc/css/form-style.css' %}">
+{%endblock%}
+{% block content %}
 恭喜，注册成功，请点<a href='/cc/login/'>这里</a>登入
+{% endblock %}
+
