@@ -99,6 +99,8 @@ class CodeComplie(object):
                 build_msg = b_out + b_err
                 run_msg = r_err
                 output = r_out
+                print "build_msg: " + build_msg
+                print "output: " + output
             return build_msg, run_msg, output
         except Exception, e:
             raise Exception(e)

@@ -258,7 +258,18 @@ $(document).ready(function () {
             }
         })
     });
+    $('#mode').change(function(){
+        var lang = $(this).children('option:selected').val();
+        //set lang in ace editor
+        if (lang ==='Java'){
+            editor.getSession().setMode("ace/mode/java");
+        }
+        else{
+            editor.getSession().setMode("ace/mode/c_cpp");
+        }
+    });
     $('#code_test').click(function(event) {
+        var lang = $('#mode').children('option:selected').val();
         $.ajax({
             url: '/cc/ajax/test_code/',
             type: 'POST',
@@ -267,6 +278,7 @@ $(document).ready(function () {
                 'code': NetPad.editor_session.getValue(),
                 'data_input':$('#input_text').val(),
                 'problem_id':'1',
+                'lang':lang,
             },
         })
         .done(function(data) {

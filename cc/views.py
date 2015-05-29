@@ -350,9 +350,16 @@ def test_code(request):
     code = request.POST.get('code', '')
     data_input = request.POST.get('data_input', '')
     problem_id = request.POST.get('problem_id', '')
+    lang = request.POST.get('lang', '')
+    print lang
+    extension = ".java" if lang == "Java" else ".cpp"
+    print extension
     data = {}
     if code and data_input and problem_id:
-        code_name = username + problem_id + '.cpp'
+        if extension == '.cpp':
+            code_name = username + problem_id + extension
+        else:
+            code_name = "Main" + extension
         data['build_msg'], data['run_msg'], data[
             'output'] = Judge(code, code_name, data_input)
     return HttpResponse(
