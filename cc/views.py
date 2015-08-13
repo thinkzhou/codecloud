@@ -11,6 +11,8 @@ from django.contrib.auth.hashers import check_password
 from cc.core.utils import *
 from cc.models import Problem
 from core.compile2 import Judge
+from django.http import StreamingHttpResponse
+import os
 ###################################
 # forms
 ###################################
@@ -366,7 +368,28 @@ def test_code(request):
         json.dumps(data),
         content_type="application/json"
     )
-
-
 def editor(request):
     return render_to_response('cc/editor.html')
+
+
+def download(request, file_name):
+    base_path = '/Users/zhouyang/upload/'
+    def file_iterator(file_name,chunk_size = 1024):
+        with open(file_name) as f:
+            while True:
+                c = f.read(chunk_size)
+                if c:
+                    yield c
+                else:
+                    break
+    the_file_name = os.path.join(base_path,file_name)
+    print file_name
+    print the_file_name
+    if file_name and os.path.exists(the_file_name) and os.path.isfile(the_file_name):
+        response = HttpResponse(file_iterator(the_file_name))
+        response['Content-Type'] = 'application/octet-stream'
+        response['Content-Disposition'] = 'attachment;filename="{0}"'.format(file_name)
+    else:
+        response = HttpResponse('can not find %s, please check the file name'%the_file_name)
+    return response
+

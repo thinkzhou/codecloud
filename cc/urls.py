@@ -30,4 +30,5 @@ urlpatterns = patterns(
     url(r'^simple/$', views.simple),
     url(r'^discuss/$', views.discuss),
     url(r'^discuss/new/$', views.new_discuss),
+    url(r'^download/(?P<file_name>.*)/$', views.download ),
 )
