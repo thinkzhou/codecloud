@@ -55,4 +55,72 @@ python manage.py syncdb
 ```shell
 pyton manage.py runserver
 ```
+###使用Apache+mod_wsgi部署
+
+安装对应软件包
+
+```
+apt-get install apache2 
+apt-get install libapache2-mod-wsgi
+```
+假设项目代码放在/var/www/下。
+
+静态文件处理，创建目录存放静态文件,假设目录为/static,后面的apache配置文件中需要相关配置。
+```
+#使用django manage.py导出静态文件
+vim /var/www/codecloud/codecloud/settings.py
+加入
+STATIC_ROOT = '/static/'
+退出vim
+cd /var/www/codecloud/
+python manage.py collectstatic
+```
+
+配置相应文件
+
+```
+#/etc/apache2/sites-enabled/codecloud.conf
+ServerName codecloud
+DocumentRoot /var/www/codecloud
+<Directory /var/www/codecloud>
+Order allow,deny
+Allow from all
+Require all granted
+</Directory>
+WSGIDaemonProcess codecloud processes=2 threads=15 display-name=%{GROUP}
+WSGIProcessGroup codecloud
+WSGIScriptAlias / /var/www/codecloud/codecloud/apache/django.wsgi
+Alias /static "/static"
+<Directory /static>
+Order allow,deny
+Allow from all
+Require all granted
+</Directory>
+```
+
+```
+#/var/www/codecloud/codecloud/apache/django.wsgi
+import os
+import sys
+path = '/var/www/codecloud'
+if path not in sys.path:
+sys.path.insert(0,'/var/www/codecloud/')
+os.environ['DJANGO_SETTINGS_MODULE'] = 'codecloud.settings'
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
+```
+
+```
+#/var/www/codecloud/codecloud/wsgi.py
+import os,sys
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "codecloud.settings")
+os.environ['PYTHON_EGG_CACHE'] = '/root/.virtualenvs'
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
+```
+重启apache 服务，访问测试
+```
+service apache restart
+```
 
