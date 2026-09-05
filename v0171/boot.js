@@ -1,0 +1,7 @@
+(function(){
+function safe(fn){try{fn()}catch(e){document.getElementById('screen').innerHTML='<div class="card"><h3>启动错误</h3><p>'+String(e&&e.message||e)+'</p></div>';}}
+function bind(id,fn){var el=document.getElementById(id);if(el)el.addEventListener('click',function(){safe(fn)});}
+function showTitle(){var has=!!localStorage.getItem('liangjie_v017');document.getElementById('screen').innerHTML='<div class="hero"><h2>两界行商 v0.17.1</h2><p>启动修正版</p></div><div class="card">'+(has?'<button id="loadGame" class="btn primary">读取存档</button>':'<p class="muted">还没有存档。</p>')+'<button id="newGame" class="btn '+(has?'':'primary')+'">重新开始</button></div>';if(window.C&&C.top)C.top();var n=document.getElementById('newGame');if(n)n.addEventListener('click',function(){safe(function(){window.S=newState();UI.map();})});var l=document.getElementById('loadGame');if(l)l.addEventListener('click',function(){safe(function(){if(C.load())UI.map();else UI.toast('没有存档');})});}
+bind('navMap',function(){UI.navMap()});bind('navRelations',function(){UI.relations()});bind('navRumors',function(){UI.rumors()});bind('navSkills',function(){UI.skills()});bind('navBags',function(){UI.bags()});bind('navPortal',function(){UI.portalShortcut()});
+showTitle();
+})();
