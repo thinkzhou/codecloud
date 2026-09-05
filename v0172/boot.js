@@ -1,0 +1,18 @@
+(function(){
+'use strict';
+var screen=document.getElementById('screen');
+var dateEl=document.getElementById('dateText'),clockEl=document.getElementById('clockText'),energyEl=document.getElementById('energyText'),moralEl=document.getElementById('moralText'),moneyEl=document.getElementById('moneyText');
+function fresh(){return {day:2,min:420,energy:60,moral:100,money:0,rmb:0,place:'temple',home:'temple',modern:false,modernUsed:false,modernLeft:5,bags:{travel:{cap:2,items:{}},ancient:{cap:5,items:{}},home:{cap:12,items:{}}},aff:{wang:18,ahe:14,suwan:12,li:5,zhou:3,chen:5,liu:12,xiaobao:20,sunpo:12,ergou:0,qianzi:2,zhao:1,lin:12,landlord:5},skills:{farming:0,fishing:0,wood:0,medicine:0,trade:0,retail:0,social:0,modernKnow:0},rumors:[],tasks:{},memory:{},plots:[null,null],farm:{leased:false,daysLeft:0,rent:0},tools:{fishHook:0,line:0},supply:{li:{stage:0,streak:0,miss:0,delivered:false,mode:'manual'}},work:{wang:{stage:0,streak:0,workedToday:false,daysThisCycle:0,cycleDay:0}}};}
+var S=fresh();
+function clock(){var h=Math.floor(S.min/60),m=S.min%60;return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');}
+function top(){dateEl.textContent='辰历 三月初'+(S.day+5);clockEl.textContent=clock();energyEl.textContent='⚡ '+S.energy+'%';moralEl.textContent='良心 '+S.moral;moneyEl.textContent=S.money+'文 · ¥'+S.rmb;}
+function fail(e){screen.innerHTML='<div class="card error"><h3>启动错误</h3><p>'+String(e&&e.stack||e&&e.message||e)+'</p></div>';}
+function safe(fn){try{fn();}catch(e){fail(e);}}
+function travel(to){if(to===S.place)return {m:0,e:0};var a=D.locations[S.place],b=D.locations[to];var d=Math.hypot(a.x-b.x,a.y-b.y);return {m:Math.max(5,Math.round(d*8)),e:Math.max(1,Math.round(d*1.8))};}
+function map(){var html='<div class="hero"><h2>青石镇 · '+clock()+'</h2><p>当前位置：'+D.locations[S.place].name+'</p></div><div class="grid">';Object.keys(D.locations).forEach(function(id){var l=D.locations[id],c=travel(id);html+='<button class="btn placeBtn" data-place="'+id+'"><b>'+l.name+'</b><br><span class="muted">'+(id===S.place?'你在这里，不耗体力':'约'+c.m+'分钟 · 体力'+c.e)+'</span></button>';});html+='</div>';screen.innerHTML=html;top();Array.prototype.forEach.call(document.querySelectorAll('.placeBtn'),function(btn){btn.addEventListener('click',function(){safe(function(){var id=btn.getAttribute('data-place'),c=travel(id);if(id===S.place){map();return;}if(S.energy<c.e){alert('体力不足');return;}S.energy-=c.e;S.min+=c.m;S.place=id;map();});});}
+function title(){var has=!!localStorage.getItem('liangjie_v0172');screen.innerHTML='<div class="hero"><h2>两界行商 v0.17.2</h2><p>启动链隔离测试</p></div><div class="card">'+(has?'<button id="loadGame" class="btn primary">读取存档</button>':'<p class="muted">还没有存档。</p>')+'<button id="newGame" class="btn '+(has?'':'primary')+'">重新开始</button></div>';top();document.getElementById('newGame').addEventListener('click',function(){safe(function(){S=fresh();localStorage.setItem('liangjie_v0172',JSON.stringify(S));map();});});var l=document.getElementById('loadGame');if(l)l.addEventListener('click',function(){safe(function(){var raw=localStorage.getItem('liangjie_v0172');if(!raw)throw new Error('没有存档');S=Object.assign(fresh(),JSON.parse(raw));map();});});}
+function bind(id,fn){document.getElementById(id).addEventListener('click',function(){safe(fn);});}
+bind('navMap',map);bind('navRelations',function(){alert('启动测试版：人物功能暂未接回');});bind('navRumors',function(){alert('启动测试版：见闻功能暂未接回');});bind('navSkills',function(){alert('启动测试版：技能功能暂未接回');});bind('navBags',function(){alert('启动测试版：背囊功能暂未接回');});bind('navPortal',function(){alert('启动测试版：穿越功能暂未接回');});
+window.addEventListener('error',function(ev){fail(ev.error||ev.message);});
+safe(title);
+})();
