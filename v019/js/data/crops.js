@@ -1,0 +1,1 @@
+window.Game=window.Game||{};Game.Data=Game.Data||{};Game.Data.crops={radishSeed:{name:'萝卜',days:3,item:'radish'},cabbageSeed:{name:'白菜',days:3,item:'cabbage'},tomatoSeed:{name:'番茄',days:4,item:'tomato'}};
