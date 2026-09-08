@@ -1,0 +1,1 @@
+window.Game=window.Game||{};Game.Data=Game.Data||{};(function(D){D.items.freshBag={name:'保鲜袋',buy:3,stack:5};D.produceIds=['cabbage','tomato','radish','cucumber','pumpkin','spinach','onion','bean','eggplant','corn'];})(Game.Data);
