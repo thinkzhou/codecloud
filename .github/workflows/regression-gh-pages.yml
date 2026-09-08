@@ -1,0 +1,19 @@
+name: gh-pages-regression
+on:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/regression-gh-pages.yml'
+      - 'ci-trigger.txt'
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run game regression
+        run: node v019/tests/node-smoke.js
