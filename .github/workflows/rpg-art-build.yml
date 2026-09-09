@@ -1,0 +1,31 @@
+name: rpg-art-build
+on:
+  push:
+    branches: [feature/rpg-art-v034]
+  pull_request:
+    branches: [master]
+    paths: ['rpg-art/**', '.github/workflows/rpg-art-build.yml']
+permissions:
+  contents: read
+jobs:
+  package-runtime:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Fetch pinned Phaser runtime
+        run: |
+          mkdir -p /tmp/engine artifact/vendor
+          cd /tmp/engine
+          npm pack phaser@4.2.1
+          tar -xzf phaser-4.2.1.tgz
+          cp package/dist/phaser.min.js "$GITHUB_WORKSPACE/artifact/vendor/"
+          cp package/types/phaser.d.ts "$GITHUB_WORKSPACE/artifact/vendor/"
+          cp package/LICENSE.md "$GITHUB_WORKSPACE/artifact/vendor/PHASER-LICENSE.md"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rpg-art-v034-runtime
+          path: artifact
+          retention-days: 7
