@@ -26,3 +26,5 @@ jobs:
           python3 -m http.server 8000 >/tmp/codecloud-http.log 2>&1 &
           sleep 1
           node v019/tests/browser-smoke.js
+      - name: Run v020 illustrated prototype smoke
+        run: node v020/tests/browser-smoke.js
