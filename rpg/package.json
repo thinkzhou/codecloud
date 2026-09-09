@@ -1,0 +1,22 @@
+{
+  "name": "liangjie-rpg",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "typecheck": "tsc --noEmit",
+    "validate:map": "node tools/validate-map.mjs",
+    "build": "npm run validate:map && npm run typecheck && vite build",
+    "preview": "vite preview",
+    "test:browser": "node tests/browser-smoke.mjs"
+  },
+  "dependencies": {
+    "phaser": "4.2.1"
+  },
+  "devDependencies": {
+    "playwright": "1.55.0",
+    "typescript": "5.9.2",
+    "vite": "7.1.5"
+  }
+}
