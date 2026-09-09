@@ -3,44 +3,49 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#171712">
-<title>两界行商 · 美术试玩版 v0.30.0</title>
-<link rel="stylesheet" href="./style.css?v=0300">
+<meta name="theme-color" content="#17140f">
+<title>两界行商 · 国风美术试玩 v0.31.0</title>
+<link rel="stylesheet" href="./style.css?v=0310">
 </head>
 <body>
 <div id="game" class="game">
   <header class="hud">
-    <div class="brand"><span class="seal">两界</span><div><b>两界行商</b><small id="where">土地庙</small></div></div>
-    <div class="clock"><b id="day">第1日</b><small id="time">17:30</small></div>
+    <div class="brand">
+      <span class="heroMedallion" aria-hidden="true"><span>行</span></span>
+      <div><b>两界行商</b><small>无名小乞丐 · Lv.1</small></div>
+    </div>
+    <div class="clock"><span id="day">第1日</span><b id="time">17:30</b><small id="where">土地庙</small></div>
     <div class="stats">
-      <span>⚡ <b id="energy">22</b></span><span>❤ <b id="health">100</b></span><span>🪙 <b id="money">0</b></span>
+      <span class="coinStat"><i>钱</i><b id="money">0</b></span>
+      <span class="energyStat"><i>气</i><b id="energy">22</b></span>
+      <span class="healthStat"><i>命</i><b id="health">100</b></span>
     </div>
   </header>
 
   <main id="scene" class="scene temple">
     <div id="sceneArt" class="sceneArt" aria-hidden="true"></div>
-    <div class="vignette"></div>
-    <button id="questChip" class="questChip"><span>今日</span><b id="questText">先活过今晚</b></button>
+    <div class="sceneGrade" aria-hidden="true"></div>
+    <button id="questChip" class="questChip"><span>今日待办</span><b id="questText">先活过今晚</b><em>›</em></button>
     <section id="npcLayer" class="npcLayer"></section>
     <section id="dialogue" class="dialogue hidden">
-      <div id="speakerAvatar" class="speakerAvatar">人</div>
+      <div id="speakerAvatar" class="speakerAvatar"></div>
       <div class="speech"><b id="speaker">旁白</b><p id="speechText"></p></div>
-      <button id="dialogueNext" class="nextBtn">继续 ›</button>
+      <button id="dialogueNext" class="nextBtn" aria-label="继续">▼</button>
     </section>
     <section id="actions" class="actions"></section>
   </main>
 
   <nav class="dock">
-    <button data-panel="map"><span>🗺️</span><small>地图</small></button>
-    <button data-panel="people"><span>♥</span><small>人物</small></button>
-    <button data-panel="journal"><span>📜</span><small>见闻</small></button>
-    <button data-panel="skills"><span>🥋</span><small>技能</small></button>
-    <button data-panel="bag"><span>🎒</span><small>背囊</small></button>
-    <button id="portalDock"><span>◉</span><small>穿越</small></button>
+    <button data-panel="map"><span class="dockIcon">山</span><small>地图</small></button>
+    <button data-panel="people"><span class="dockIcon">人</span><small>人物</small></button>
+    <button data-panel="journal"><span class="dockIcon">闻</span><small>见闻</small></button>
+    <button data-panel="skills"><span class="dockIcon">武</span><small>技能</small></button>
+    <button data-panel="bag"><span class="dockIcon">囊</span><small>背囊</small></button>
+    <button id="portalDock"><span class="portalOrb">◉</span><small>穿越</small></button>
   </nav>
 </div>
 <div id="toast" class="toast"></div>
 <div id="overlay" class="overlay hidden"><div id="panel" class="panel"></div></div>
-<script src="./game.js?v=0300"></script>
+<script src="./game.js?v=0310"></script>
 </body>
 </html>
