@@ -1,0 +1,47 @@
+name: rpg-phase0
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'rpg/**'
+      - '.github/workflows/rpg-phase0.yml'
+  push:
+    branches: [master]
+    paths:
+      - 'rpg/**'
+      - '.github/workflows/rpg-phase0.yml'
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: rpg
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+      - name: Validate Tiled map schema
+        run: npm run validate:map
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Build Phaser runtime
+        run: npm run build
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run gameplay browser smoke
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/liangjie-rpg-preview.log 2>&1 &
+          sleep 2
+          npm run test:browser
+      - name: Upload greybox screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: liangjie-rpg-phase0
+          path: rpg/test-artifacts
+          if-no-files-found: ignore
