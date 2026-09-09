@@ -1,1 +1,1 @@
-gh-pages regression trigger v0310-guofeng-retry1
+gh-pages regression trigger v0320-walkable-map
