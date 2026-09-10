@@ -7,12 +7,18 @@ page.on('pageerror', e => errors.push(String(e)));
 page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
 
 await page.goto('http://127.0.0.1:8000/v035/?ci=1', { waitUntil: 'load' });
-await page.waitForFunction(() => document.title === 'CI_PASS', null, { timeout: 10000 });
-const checks = await page.locator('#ci-result').innerText();
+await page.waitForTimeout(1500);
+const title = await page.title();
+const ciCount = await page.locator('#ci-result').count();
+const checks = ciCount ? await page.locator('#ci-result').innerText() : '(no #ci-result)';
+if (title !== 'CI_PASS') {
+  throw new Error(`CI bootstrap failed. title=${title}\nchecks=${checks}\npageErrors=${errors.join(' | ') || '(none)'}`);
+}
 for (const required of ['PASS world created','PASS map layered buildings','PASS path available','PASS true map action','PASS NPC count']) {
   if (!checks.includes(required)) throw new Error(`Missing check: ${required}\n${checks}`);
 }
 
+errors.length = 0;
 await page.goto('http://127.0.0.1:8000/v035/', { waitUntil: 'load' });
 await page.locator('#new').click();
 await page.waitForTimeout(300);
