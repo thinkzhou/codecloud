@@ -1,0 +1,31 @@
+import { chromium } from 'playwright';
+import fs from 'node:fs';
+fs.mkdirSync('test-artifacts',{recursive:true});
+const browser=await chromium.launch({headless:true});
+const page=await browser.newPage({viewport:{width:390,height:844}});const errors=[];
+page.on('pageerror',e=>errors.push('pageerror: '+e.message));page.on('console',m=>{if(m.type()==='error')errors.push('console: '+m.text())});
+try{
+  await page.goto('http://127.0.0.1:4173/?test=1',{waitUntil:'networkidle',timeout:30000});
+  await page.waitForFunction(()=>window.__RPG_TEST__?.ready===true,{timeout:15000});
+  const initial=await page.evaluate(()=>({state:window.__RPG_TEST__.getState(),player:window.__RPG_TEST__.getPlayer()}));
+  if(initial.state.mapId!=='luoxia_town')throw new Error('wrong map loaded');
+  if(!initial.state.phaserVersion.startsWith('4.2.1'))throw new Error('unexpected Phaser version '+initial.state.phaserVersion);
+  const canvas=page.locator('canvas');if(await canvas.count()!==1)throw new Error('Phaser canvas missing');
+  await canvas.click({position:{x:285,y:470}});
+  await page.waitForFunction(()=>window.__RPG_TEST__ && !window.__RPG_TEST__.getState().moving,{timeout:8000});
+  const moved=await page.evaluate(()=>window.__RPG_TEST__.getPlayer());
+  if(Math.hypot(moved.x-initial.player.x,moved.y-initial.player.y)<40)throw new Error('tap-to-move did not move player');
+  const npc=await page.evaluate(()=>window.__RPG_TEST__.getNpcScreenPosition('xiaobao'));
+  if(!npc)throw new Error('xiaobao missing');
+  if(npc.x<0||npc.y<0||npc.x>390||npc.y>844)throw new Error('xiaobao not visible for phase0 interaction');
+  await canvas.click({position:{x:npc.x,y:npc.y}});
+  await page.waitForFunction(()=>window.__RPG_TEST__?.getState().dialogue===true,{timeout:8000});
+  const text=await page.locator('#dialogue-text').textContent();if(!text?.includes('河边最近有鱼'))throw new Error('xiaobao dialogue missing');
+  await page.locator('#dialogue-next').click();
+  const accepted=await page.evaluate(()=>window.__RPG_TEST__.requestInteraction('interaction.town.river-exit'));
+  if(!accepted)throw new Error('river exit interaction rejected');
+  await page.waitForFunction(()=>window.__RPG_TEST__?.getState().region==='river_gate',{timeout:15000});
+  await page.screenshot({path:'test-artifacts/phase0-greybox.png',fullPage:true});
+  if(errors.length)throw new Error(errors.join(' | '));
+  console.log('RPG_PHASE0_BROWSER_OK');
+} finally {await browser.close();}
